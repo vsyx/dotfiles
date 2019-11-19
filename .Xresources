@@ -1,0 +1,49 @@
+!! Colorscheme
+
+! special
+*.foreground: #93a1a1
+!*.background: #141c21 
+*.background: #000000
+*.cursorColor: #afbfbf
+
+! black
+*.color0: #263640
+*.color8: #4a697d
+
+! red
+*.color1: #d12f2c
+*.color9: #fa3935
+
+! green
+*.color2: #819400
+*.color10: #a4bd00
+
+! yellow
+*.color3: #b08500
+*.color11: #d9a400
+
+! blue
+*.color4: #2587cc
+*.color12: #2ca2f5
+
+! magenta
+*.color5: #696ebf
+*.color13: #8086e8
+
+! cyan
+*.color6: #289c93
+*.color14: #33c5ba
+
+! white
+*.color7: #bfbaac
+*.color15: #fdf6e3
+
+*.font: monospace:pixelsize=14:antialias=true:autohint=true;
+!*.alpha: 0.9
+
+!URxvt.font: xft:monospace:bold:size=12
+!URxvt.letterSpace: -1
+! do not scroll with output
+!URxvt*scrollTtyOutput: false
+!URxvt*scrollWithBuffer: true
+!URxvt*scrollTtyKeypress: true
