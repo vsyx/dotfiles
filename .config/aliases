@@ -10,3 +10,12 @@ function chpwd() {
 }
 
 alias dotconfig='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+nviml() {
+    nvim -u $CONFIG/nvim/lightinit.vim $@
+}
+
+nman() {
+    nviml -Rc "Man $@ | on" 
+}
+

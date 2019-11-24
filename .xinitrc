@@ -1,4 +1,4 @@
-#!/bin/sh
+#/bin/sh
 
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
@@ -37,5 +37,10 @@ fi
 #xterm -geometry 80x50+494+51 &
 #xterm -geometry 80x20+494-0 &
 #exec xterm -geometry 80x66+0+0 -name login
+
+feh --bg-scale ~/Downloads/wallpaper.jpg
+xsetroot -solid #000000
+picom &
+sxhkd & 
 $CONFIG/xset &
 exec dwm

@@ -19,9 +19,9 @@ call plug#begin()
 
 	"Looks
 	Plug 'bling/vim-airline'
-	Plug 'vim-airline/vim-airline-themes'
+	"Plug 'vim-airline/vim-airline-themes'
 
-	Plug 'altercation/vim-colors-solarized'	
+	"Plug 'altercation/vim-colors-solarized'	
 	Plug 'drewtempelmeyer/palenight.vim'
 	Plug 'rj-white/waterfall.vim'
 	
@@ -72,10 +72,11 @@ filetype plugin indent on
 syntax enable 
 
 "Colors
-set background=dark
-let g:solarized_termcolors=256
+"set background=dark
+"let g:solarized_termcolors=256
 colorscheme palenight
 let g:palenight_terminal_italics=1
+highlight Normal guibg=none
 
 let g:airline_theme = "palenight"
 let g:airline_powerline_fonts = 1
@@ -99,8 +100,8 @@ set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " tabs are space
-"set autoindent
-"set copyindent      " copy indent from the previous line
+set autoindent
+set copyindent      " copy indent from the previous line
 " }}} Spaces & Tabs
 "
 tnoremap <Esc> <C-\><C-n>
