@@ -19,3 +19,8 @@ nman() {
     nviml -Rc "Man $@ | on" 
 }
 
+alias topmem='ps axch ocmd:15,%mem | sort -uk 1.1,1.15 | sort -rk 1.16 | head'
+alias topcpu='ps axch ocmd:15,%cpu | sort -uk 1.1,1.15 | sort -rk 1.16 | head'
+alias expacsize="expac -S -H M '%kt %n'"
+alias expacdate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail"
+alias dmenu="dmenu -nb #000000"

@@ -1,3 +1,4 @@
+set nocompatible
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 	      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -13,19 +14,28 @@ call plug#begin()
 
 	Plug 'vim-scripts/DoxygenToolkit.vim'
 	Plug 'chemzqm/vim-jsx-improve'
-	Plug 'christoomey/vim-tmux-navigator'
+	Plug 'christoomey/vim-tmux-navigator' 
 	Plug 'Shougo/neosnippet.vim'
 	Plug 'Shougo/neosnippet-snippets'
+	Plug 'dhruvasagar/vim-table-mode'
 
-	"Looks
-	Plug 'bling/vim-airline'
-	"Plug 'vim-airline/vim-airline-themes'
+    Plug 'abnt713/vim-hashpunk'
+    Plug 'agreco/vim-citylights'
+    Plug 'BarretRen/vim-colorscheme'
 
-	"Plug 'altercation/vim-colors-solarized'	
-	Plug 'drewtempelmeyer/palenight.vim'
-	Plug 'rj-white/waterfall.vim'
-	
+	Plug 'bling/vim-airline' 
+	"Plug 'NLKNguyen/papercolor-theme'
+	Plug 'vim-airline/vim-airline-themes'
+	"Plug 'drewtempelmeyer/palenight.vim'
 call plug#end()
+
+augroup remember_folds
+  autocmd!
+  autocmd BufWinLeave * mkview
+  autocmd BufWinEnter * silent! loadview
+augroup END
+
+let g:airline#extensions#tabline#enabled = 1
 
 "Compiling for various languages
 function! Cpp()
@@ -41,8 +51,12 @@ autocmd FileType c call C()
 function! Js()
     nnoremap <F5> :wa!<Enter> :!node % <Enter>
 endfunc
-
 autocmd Filetype javascript call Js()
+
+function! Tex()
+    nnoremap <F5> :wa!<Enter> :!pdflatex % <Enter>
+endfunc
+autocmd Filetype tex call Tex()
 
 "NERDtree
 autocmd StdinReadPre * let s:std_in=1
@@ -57,7 +71,7 @@ if ! has('gui_running')
         au InsertLeave * set timeoutlen=1000
     augroup END
 endif
-
+"
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
@@ -67,46 +81,48 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
-set nocompatible
 filetype plugin indent on
 syntax enable 
+set selectmode+=mouse
 
 "Colors
-"set background=dark
-"let g:solarized_termcolors=256
-colorscheme palenight
-let g:palenight_terminal_italics=1
+colorscheme hashpunk-sweet
+let g:airline_theme="badcat"
 highlight Normal guibg=none
 
-let g:airline_theme = "palenight"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-
 let g:load_doxygen_syntax=1
+
+nnoremap <A-9> <C-O>
+nnoremap <A-0> <C-I>
+vnoremap <A-c> "+y
+inoremap <A-v> <C-R>+
+
 
 set number
 set rnu
+set formatoptions+=t
+set textwidth=80
 
-"Pane navigation
-"nnoremap <C-J> <C-W><C-J>
-"nnoremap <C-K> <C-W><C-K>
-"nnoremap <C-L> <C-W><C-L>
-"nnoremap <C-H> <C-W><C-H>
+set showmatch
+set ignorecase
 set splitbelow
 set splitright
 
-" Spaces & Tabs {{{
+" Spaces & Tabs 
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " tabs are space
 set autoindent
+
 set copyindent      " copy indent from the previous line
-" }}} Spaces & Tabs
-"
+
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>n :NERDTreeToggle<CR>
 
+"Coc stuff
 " if hidden is not set, TextEdit might fail.
 set hidden
 
@@ -232,9 +248,16 @@ nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+
 " Do default action for next item.
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+"Pane navigation
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+"nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-H> <C-W><C-H>

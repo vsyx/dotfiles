@@ -5,6 +5,10 @@ if [ -f $CONFIG/aliases ]; then
     source $CONFIG/aliases
 fi
 
+if [ -f $CONFIG/lf/lfcd.sh ]; then
+    source $CONFIG/lf/lfcd.sh
+fi
+
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=$ZDOTDIR/hist
@@ -50,16 +54,6 @@ git_branch() {
 }
 PROMPT='%F{205}%5c%f $(git_branch) '
 
-#typeset -A ZSH_HIGHLIGHT_STYLES
-#ZSH_HIGHLIGHT_STYLES[alias]=none
-#ZSH_HIGHLIGHT_STYLES[builtin]=none
-#ZSH_HIGHLIGHT_STYLES[function]=none
-#ZSH_HIGHLIGHT_STYLES[command]=none
-#ZSH_HIGHLIGHT_STYLES[precommand]=none
-#ZSH_HIGHLIGHT_STYLES[commandseparator]=none
-#ZSH_HIGHLIGHT_STYLES[hashed-command]=none
-#ZSH_HIGHLIGHT_STYLES[path]=none
-#ZSH_HIGHLIGHT_STYLES[globbing]=none
 
 # Syntax highlight has to be at the end
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
