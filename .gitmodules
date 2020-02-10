@@ -1,0 +1,6 @@
+[submodule ".local/st"]
+	path = .local/st
+	url = /home/tixxy/.local/source/st
+[submodule ".local/dwm"]
+	path = .local/dwm
+	url = /home/tixxy/.local/source/dwm
