@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+while :; do
+    refbar
+	sleep 10s & 
+	wait
+done

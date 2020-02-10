@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+declare -r XORG="/etc/X11/xorg.conf.d"
+
+chgpu() {
+    if [ $# -ne  2 ]; then
+        return 
+    fi
+    
+    if [ -f "$XORG/15-$1.conf.backup" ]; then
+        mv $XORG/15-$1.conf.backup $XORG/15-$1.conf
+
+        if [[ -f "$XORG/15-$2.conf" ]]; then
+            mv $XORG/15-$2.conf $XORG/15-$2.conf.backup
+        fi
+    fi
+}
+
+if [ $# -eq 1 ]; then
+    case "$1" in
+        "intel" ) chgpu intel nvidia;;
+        "nvidia") chgpu nvidia intel;;
+    esac
+fi
+

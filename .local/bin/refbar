@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+delim="|"
+
+if [[ -n "$@" ]]; then
+    $@
+fi
+
+setup () {
+    printf "%142c" " "
+
+    amixer sget Master | tail -n 1 | tr -d '[]' | \
+        awk '{if ($6 == "on") print $4; else print "M"}' #sound
+    echo $delim
+
+    mpstat --dec=0 | tail -n 1 | awk '{print 100 - $12"%"}' #cpu
+    echo $delim
+
+    free -m | awk '/^Mem:/ {print int($3 / 100) / 10 "/" int($2 / 100) / 10}' #mem
+    echo $delim
+
+    date "+%d/%m %R"
+}
+
+xsetroot -name "$(setup | tr '\n' ' ')"

@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+if [ $# -eq 1 ]; then
+    base=`basename $1`
+    ofile=$base
+
+    if [[ $base != *.png ]]; then
+        ofile="${ofile}.png"
+    fi
+
+    if [[ -f $ofile ]]; then
+        echo "Overwrite existing file? (y/n)" $ofile
+        read overwrite
+
+        if [[ $ofile == "n" ]]; then
+            exit 0
+        fi
+    fi
+
+    xclip -selection clipboard -t image/png -o > $ofile
+fi

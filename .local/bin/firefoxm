@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+firefox --class "fx_music" --profile /home/tixxy/.config/firefox/fx_music
