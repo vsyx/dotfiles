@@ -1,0 +1,10 @@
+
+    {
+        "window.zoomLevel": 0,
+        "java.errors.incompleteClasspath.severity": "ignore",
+        "java.configuration.checkProjectSettingsExclusions": false,
+        "editor.suggestSelection": "first",
+        "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+        "C_Cpp.updateChannel": "Insiders",
+        "workbench.colorTheme": "Pitch Black",
+    }

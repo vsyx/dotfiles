@@ -31,7 +31,6 @@ set nobackup
 set nowritebackup
 set cmdheight=2
 
-
 "NERDtree
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>n :NERDTreeToggle<CR>
@@ -64,4 +63,4 @@ let g:airline_theme = "palenight"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:load_doxygen_syntax=1
-"hi! Normal ctermbg=NONE guibg=NONE
+hi! Normal ctermbg=NONE guibg=NONE

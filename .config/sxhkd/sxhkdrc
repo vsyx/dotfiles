@@ -1,0 +1,18 @@
+XF86Audio{LowerVolume,RaiseVolume}
+    amixer sset Master 10%{-,+} && refbar
+# XF86AudioMute
+#    amixer sset Master toggle && refbar
+
+XF86MonBrightness{Down,Up}
+    xbacklight -{dec,inc} 5
+
+alt + shift + f
+    firefox
+
+alt + shift + n
+    st nvim
+alt + shift + t
+    st
+
+Print
+    maim -s | xclip -selection clipboard -t image/png

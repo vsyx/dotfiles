@@ -44,9 +44,12 @@ xrandr --auto
 #xterm -geometry 80x20+494-0 &
 #exec xterm -geometry 80x66+0+0 -name login
 
+xsetroot -cursor_name left_ptr
 feh --bg-scale ~/Downloads/wallpaper.jpg
 #xsetroot -solid #000000
 picom &
-sxhkd & 
-$CONFIG/xset &
-exec dwm
+#setbar &
+#sxhkd & 
+#exec dwm
+sxhkd -c $XDG_CONFIG_HOME/sxhkd/sxhkdrc2 &
+exec bspwm

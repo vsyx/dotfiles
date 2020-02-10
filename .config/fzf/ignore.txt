@@ -1,0 +1,10 @@
+.cache
+.surf
+.nv
+.fzf
+.npm
+.mozzila
+.cache
+.local/lib
+node_modules/
+.git/

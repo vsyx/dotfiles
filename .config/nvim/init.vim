@@ -18,45 +18,45 @@ call plug#begin()
 	Plug 'Shougo/neosnippet.vim'
 	Plug 'Shougo/neosnippet-snippets'
 	Plug 'dhruvasagar/vim-table-mode'
+	Plug 'tpope/vim-vinegar'
 
     Plug 'abnt713/vim-hashpunk'
     Plug 'agreco/vim-citylights'
     Plug 'BarretRen/vim-colorscheme'
 
 	Plug 'bling/vim-airline' 
+	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+	Plug 'junegunn/fzf.vim'
 	"Plug 'NLKNguyen/papercolor-theme'
 	Plug 'vim-airline/vim-airline-themes'
-	"Plug 'drewtempelmeyer/palenight.vim'
+	Plug 'drewtempelmeyer/palenight.vim'
 call plug#end()
 
-augroup remember_folds
-  autocmd!
-  autocmd BufWinLeave * mkview
-  autocmd BufWinEnter * silent! loadview
-augroup END
+function Vspd()
+    let l:path = expand('%:p:h')
+    execute 'vsp' . l:path
+endfunction
 
 let g:airline#extensions#tabline#enabled = 1
 
-"Compiling for various languages
-function! Cpp()
-    nnoremap <F5> :w!<Enter> :!g++ -o __targetFile *.cpp -I ../include/ -O3 && ./__targetFile && rm __targetFile <Enter>
-endfunc
-autocmd FileType cpp call Cpp()
+nnoremap <A-g> :GFiles <CR>
+nnoremap <A-f> :Files <CR>
 
-function! C()
-    nnoremap <F5> :w!<Enter> :!gcc -Wall -std=c11 -pedantic % -o __temp -lm && ./__temp && rm __temp <Enter>
-endfunc
-autocmd FileType c call C()
+" Compiling for various langs
+autocmd FileType c nnoremap <F5> :!gcc -Wall -std=c11 -pedantic 
+            \% -o __temp -lm && ./__temp && rm __temp <CR>
+autocmd FileType cpp nnoremap <F5> :!g++ -o __targetFile *.cpp 
+            \-I ../include/ -O3 && ./__targetFile && rm __targetFile <CR>
+autocmd Filetype javascript nnoremap <F5> :!node % <CR>
+autocmd Filetype tex nnoremap <F5> :!pdflatex % <CR>
+autocmd Filetype lisp nnoremap <F5> :!sbcl --script % <CR>
+autocmd BufNewFile,BufRead *.jsx set filetype=javascript
 
-function! Js()
-    nnoremap <F5> :wa!<Enter> :!node % <Enter>
+function! Markdown()
+    let l:fname = expand('%:r')
+    exe "!pandoc --output=". l:fname. ".html --to=html5 --css=". l:fname. ".css --highlight-style=haddock --self-contained --standalone ". expand('%')
 endfunc
-autocmd Filetype javascript call Js()
-
-function! Tex()
-    nnoremap <F5> :wa!<Enter> :!pdflatex % <Enter>
-endfunc
-autocmd Filetype tex call Tex()
+autocmd Filetype markdown nnoremap <F5> :wa!<Enter> :call Markdown()<Enter>
 
 "NERDtree
 autocmd StdinReadPre * let s:std_in=1
@@ -98,13 +98,12 @@ nnoremap <A-9> <C-O>
 nnoremap <A-0> <C-I>
 vnoremap <A-c> "+y
 inoremap <A-v> <C-R>+
-
+tnoremap <Esc> <C-\><C-n>
+nnoremap <leader>n :NERDTreeToggle<CR>
 
 set number
 set rnu
 set formatoptions+=t
-set textwidth=80
-
 set showmatch
 set ignorecase
 set splitbelow
@@ -118,9 +117,6 @@ set expandtab       " tabs are space
 set autoindent
 
 set copyindent      " copy indent from the previous line
-
-tnoremap <Esc> <C-\><C-n>
-nnoremap <leader>n :NERDTreeToggle<CR>
 
 "Coc stuff
 " if hidden is not set, TextEdit might fail.

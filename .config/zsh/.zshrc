@@ -1,28 +1,23 @@
-# Lines configured by zsh-newuser-install
 zmodload zsh/complist
 
-if [ -f $CONFIG/aliases ]; then
-    source $CONFIG/aliases
-fi
-
-if [ -f $CONFIG/lf/lfcd.sh ]; then
-    source $CONFIG/lf/lfcd.sh
+if [ -f $XDG_CONFIG_HOME/aliases ]; then
+    source $XDG_CONFIG_HOME/aliases
 fi
 
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=$ZDOTDIR/hist
 
-autoload -Uz compinit promptinit
+autoload -Uz compinit promptinit && compinit -U
 zstyle ':completion:*' menu select gain-privileges 1
 compinit
 _comp_options+=(globdots)
 promptinit
 
 unsetopt beep
-bindkey -v
 autoload edit-command-line; zle -N edit-command-line
-bindkey '^w' edit-command-line
+bindkey -v
+bindkey '^e' edit-command-line
 export KEYTIMEOUT=1
 
 function zle-keymap-select {
@@ -54,6 +49,55 @@ git_branch() {
 }
 PROMPT='%F{205}%5c%f $(git_branch) '
 
+#Autojump
+[[ -s /home/tixxy/.autojump/etc/profile.d/autojump.sh ]] && source /home/tixxy/.autojump/etc/profile.d/autojump.sh
+
+# fzf
+[ -f $XDG_CONFIG_HOME/fzf/fzf.zsh ] && source $XDG_CONFIG_HOME/fzf/fzf.zsh 
+#bindkey -r '^[c' # unbind default fzf cd search
+
+stty -ixon # unbind C-S
+stty -ixoff # unbind C-Q
+
+function x11-clip-wrap-widgets() {
+    # NB: Assume we are the first wrapper and that we only wrap native widgets
+    # See zsh-autosuggestions.zsh for a more generic and more robust wrapper
+    local copy_or_paste=$1
+    shift
+
+    for widget in $@; do
+        # Ugh, zsh doesn't have closures
+        if [[ $copy_or_paste == "copy" ]]; then
+            eval "
+            function _x11-clip-wrapped-$widget() {
+                zle .$widget
+                xclip -in -selection clipboard <<<\$CUTBUFFER
+            }
+            "
+        else
+            eval "
+            function _x11-clip-wrapped-$widget() {
+                CUTBUFFER=\$(xclip -out -selection clipboard)
+                zle .$widget
+            }
+            "
+        fi
+
+        zle -N $widget _x11-clip-wrapped-$widget
+    done
+}
+
+
+local copy_widgets=(
+    vi-yank vi-yank-eol 
+)
+local paste_widgets=(
+    vi-put-{before,after}
+)
+
+# NB: can atm. only wrap native widgets
+x11-clip-wrap-widgets copy $copy_widgets
+x11-clip-wrap-widgets paste  $paste_widgets
 
 # Syntax highlight has to be at the end
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

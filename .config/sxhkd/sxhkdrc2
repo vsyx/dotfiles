@@ -1,0 +1,48 @@
+super + Return
+    st	
+
+super + d
+    dmenu_run -fn monospace:size=12 -nb '#000000' -nf '#ffffff' -sb '#d7005f' 
+
+# Reloading wm/sxhkd
+super + shift + w
+  bspc wm -r; pkill -USR1 -x sxhkd
+
+# Closing/Killing node
+super + shift + q
+	bspc node -c
+
+# Focusing/Swapping/Resize
+super + {_,ctrl +,shift +}{h,j,k,l}
+    wm_action {select f,select s,resize} {west,south,north,east}
+
+# Preselecting
+super + mod5 + {h,j,k,l}
+    bspc node -p '~'{west,south,north,east}
+
+# Selecting desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} ^{1-9,10}
+
+# Toggling fullscreen / Tiled
+super + {_,shift + }f
+	bspc {desktop -l next,node -t '~fullscreen'}
+
+#super + {t,shift + t,s,f}
+#	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+super + b 
+    wm_action toggle_polybar
+
+# Toggle floating
+super + shift + space 
+    bspc node focused -t '~floating'
+
+XF86Audio{LowerVolume,RaiseVolume}
+    amixer sset Master 10%{-,+} && refbar
+
+XF86MonBrightness{Down,Up}
+    xbacklight -{dec,inc} 5
+
+Print
+    maim -s | xclip -selection clipboard -t image/png

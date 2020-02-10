@@ -1,0 +1,13 @@
+#!/bin/sh
+
+declare mode=`bspc query -T -d focused | jq '. | .layout'`
+declare dir="$2"
+
+if [ "$mode" = '"monocle"' ]; then
+    case "$dir" in
+        'north') dir='prev';;
+        'south') dir='next';;
+    esac
+fi
+
+bspc node -"$1" "$dir".local
