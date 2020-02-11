@@ -10,7 +10,6 @@ call plug#begin()
 	Plug 'christoomey/vim-tmux-navigator'
 	"Looks
 	Plug 'bling/vim-airline'
-	Plug 'drewtempelmeyer/palenight.vim'
 call plug#end()
 
 set nocompatible
@@ -30,12 +29,6 @@ set hidden
 set nobackup
 set nowritebackup
 set cmdheight=2
-
-"NERDtree
-tnoremap <Esc> <C-\><C-n>
-nnoremap <leader>n :NERDTreeToggle<CR>
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 
 "Some bs that might help with airline performance
 if ! has('gui_running')
@@ -57,10 +50,7 @@ if exists('+termguicolors')
 endif
 
 "set background=dark
-colorscheme palenight
-let g:palenight_terminal_italics=1
-let g:airline_theme = "palenight"
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
+colorscheme hashpunk-sweet
+let g:airline_theme = "badcat"
 let g:load_doxygen_syntax=1
 hi! Normal ctermbg=NONE guibg=NONE
