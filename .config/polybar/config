@@ -93,8 +93,8 @@ label-marked = Marked
 type = internal/alsa
 interval 5
 
-[module/xbacklight]
-type = internal/xbacklight
+#[module/xbacklight]
+#type = internal/xbacklight
 
 format = <label>
 abel = %percentage%%

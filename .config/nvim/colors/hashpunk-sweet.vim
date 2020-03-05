@@ -1,8 +1,3 @@
-" Name:         hashpunk
-" Author:       abnt713
-" Maintainer:   abnt713
-" License:      MIT
-
 highlight clear
 
 if exists('syntax_on')
@@ -56,6 +51,17 @@ endfunction
 " For reference on what each group does, please refer to this:
 " vimdoc.sourceforge.net/htmldoc/syntax.html
 "
+
+call s:highlight('markdownItalic', s:Grey93, s:clear, s:italic)
+call s:highlight('markdownCode', s:MainColor, s:clear, s:none)
+call s:highlight('markdownCodeBlock', s:MainColor, s:clear, s:none)
+call s:highlight('markdownCodeDelimiter', s:MainColor, s:clear, s:none)
+call s:highlight('netrwClassify', s:Grey66, s:clear, s:none)
+
+call s:highlight('fzf1', s:MainColor, s:clear, s:none)
+call s:highlight('fzf2', s:MainColor, s:clear, s:none)
+call s:highlight('fzf3', s:MainColor, s:clear, s:none)
+
 call s:highlight('Comment', s:Grey42, s:clear, s:italic)
 call s:highlight('Constant', s:MainColor, s:clear, s:none)
 call s:highlight('String', s:Grey93, s:clear, s:none)
@@ -96,11 +102,10 @@ call s:highlight('Underlined', s:Grey54, s:clear, s:underline)
 call s:highlight('Error', s:MainColor, s:clear, s:underline)
 call s:highlight('Todo', s:MainColor, s:clear, s:none)
 
-call s:highlight('Directory', s:Grey93, s:clear, s:bold)
+call s:highlight('Directory', s:Grey66, s:clear, s:none)
 call s:highlight('CursorLine', s:MainColor, s:clear, s:bold)
 call s:highlight('MatchParen', s:MainColor, s:Grey93, s:none)
 call s:highlight('ColorColumn', s:MainColor, s:Grey15, s:none)
-
 
 " Interface highlighting
 call s:highlight('Normal', s:Grey93, s:Grey0, s:none)
@@ -113,8 +118,9 @@ call s:highlight('CursorLineNr', s:MainColor, s:clear, s:none)
 call s:highlight('VertSplit', s:Grey15, s:clear, s:none)
 
 " Pmenu
-call s:highlight('Pmenu', s:Grey93, s:Grey19, s:none)
-call s:highlight('PmenuSel', s:MainColor, s:Grey15, s:none)
+call s:highlight('Pmenu', s:Grey93, [16, '#090909'], s:none)
+call s:highlight('PmenuSel', s:MainColor, [16, '#090909'], s:none)
+call s:highlight('TabLineSel', s:MainColor, s:clear, s:italic)
 
 " Search
 call s:highlight('Search', s:Grey93, s:MainColor, s:none)
