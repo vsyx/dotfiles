@@ -52,6 +52,8 @@ endfunction
 " vimdoc.sourceforge.net/htmldoc/syntax.html
 "
 
+call s:highlight('StatusLine', s:Grey93, s:clear, s:none)
+
 call s:highlight('markdownItalic', s:Grey93, s:clear, s:italic)
 call s:highlight('markdownCode', s:MainColor, s:clear, s:none)
 call s:highlight('markdownCodeBlock', s:MainColor, s:clear, s:none)

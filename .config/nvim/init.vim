@@ -22,9 +22,27 @@ call plug#begin()
 	Plug 'Yggdroot/indentLine'
 
 	Plug 'bling/vim-airline' 
+	Plug 'vim-airline/vim-airline-themes'
 	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 	Plug 'junegunn/fzf.vim'
 call plug#end()
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Zoom / Restore window.
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+command! ZoomToggle call s:ZoomToggle()
+nnoremap <silent> <C-A> :ZoomToggle<CR>
 
 "Coc extensions
 let g:coc_global_extensions = [
@@ -33,7 +51,8 @@ let g:coc_global_extensions = [
             \'coc-tslint-plugin',
             \'coc-python',
             \'coc-java',
-            \'https://github.com/xabikos/vscode-javascript'
+            \'https://github.com/xabikos/vscode-javascript',
+            \'https://github.com/dgileadi/vscode-java-decompiler'
             \]
 
 "Mappings
