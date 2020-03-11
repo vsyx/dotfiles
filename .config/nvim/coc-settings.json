@@ -16,7 +16,7 @@
     "coc.preferences.formatOnType": true,
     "java": {
         "home": "/usr/lib/jvm/default",
-        "jdt.ls.home": "/home/tixxy/.config/coc/extensions/coc-java-data/server2",
+        //jdt.ls.home": "/home/tixxy/.config/coc/extensions/coc-java-data/server2",
         "format": {
             "enable": true,
             "onType.enabled": true,

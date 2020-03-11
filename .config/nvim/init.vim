@@ -27,22 +27,26 @@ call plug#begin()
 	Plug 'junegunn/fzf.vim'
 call plug#end()
 
-autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Zoom / Restore window.
-function! s:ZoomToggle() abort
-    if exists('t:zoomed') && t:zoomed
-        execute t:zoom_winrestcmd
-        let t:zoomed = 0
+let myCustomFiletype = 'java'
+augroup Compile_commands
+    autocmd! 
+    autocmd FileType myCustomFiletype nnoremap <silent> <F5> :call CompileJava()<CR>
+augroup END
+
+function! CompileJava()
+    let l:proj_root = Get_project_root()
+    let l:command = ""
+
+    if !empty(l:proj_root) 
+        if filereadable(l:proj_root . '/pom.xml')
+            let l:command = systemlist('(cd '.l:proj_root.';mvn compile exec:java -q)')
+        endif
     else
-        let t:zoom_winrestcmd = winrestcmd()
-        resize
-        vertical resize
-        let t:zoomed = 1
+        let l:command = systemlist('java '. expand('%'))
     endif
+    call floating_window#OpenFloatingWindow(l:command)
 endfunction
-command! ZoomToggle call s:ZoomToggle()
-nnoremap <silent> <C-A> :ZoomToggle<CR>
 
 "Coc extensions
 let g:coc_global_extensions = [
@@ -112,40 +116,64 @@ endif
 "Syntax
 let g:load_doxygen_syntax=1
 
+" Zoom / Restore window.
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+command! ZoomToggle call s:ZoomToggle()
+nnoremap <silent> <C-A> :ZoomToggle<CR>
+
 function! s:get_git_root()
-    return split(system('git rev-parse --show-toplevel'), '\n')[0]
+    let l:res = split(system('git rev-parse --show-toplevel'), '\n')[0]
+    return v:shell_error == 0 ? l:res : 0
 endfunction
 
-function! s:get_project_root()
-    "prioritize git
-    let gitRoot = s:get_git_root()
-    if empty(gitRoot) != 0
-        return gitRoot
-    endif
-    "fallback to coc workspace
+function! s:get_coc_root()
     for workspace in g:WorkspaceFolders
         if stridx(expand('%:p'), workspace) != '-1'
             return workspace
         endif
     endfor
-    return getcwd()
 endfunction
 
-function! ExploreProject()
-    let root = s:get_project_root()
-    call fzf#run(fzf#wrap({'source': 'fd -t d', 'dir': root, 'sink': 'Explore'}))
+function! Get_project_root()
+    let l:sources = [function('s:get_git_root'), function('s:get_coc_root')]
+    for Source in l:sources
+        let l:dict = call(Source, [])
+        if !empty(l:dict) 
+            return l:dict
+        endif
+    endfor
 endfunction
 
 function! ProjectFiles()
-    let gitRoot = s:get_git_root()
-    if empty(gitRoot) == 0
+    let l:gitRoot = s:get_git_root()
+    if !empty(l:gitRoot) 
         execute "GFiles -co --exclude-standard"
-    else
-        execute "FZF " . s:get_project_root()
+        return 1
+    endif
+
+    let l:cocRoot = s:get_coc_root()
+    if !empty(l:cocRoot) 
+        execute "FZF " . l:cocRoot
+        return 1
     endif
 endfunction
 
-nnoremap <M-q> :call ExploreProject()<CR>
+"function! ExploreProject()
+"    let root = s:get_project_root()
+"    call fzf#run(fzf#wrap({'source': 'fd -t d', 'dir': root, 'sink': 'Explore'}))
+"endfunction
+
+
 nnoremap <M-g> :call ProjectFiles()<CR>
 nnoremap <M-f> :Files~<CR>
 nnoremap <M-b> :Buffers<CR>
@@ -198,7 +226,7 @@ omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
 nmap <silent> <TAB> <Plug>(coc-range-select)
 xmap <silent> <TAB> <Plug>(coc-range-select)
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 nnoremap <leader>a :CocAction <CR>
 let g:coc_snippet_next = '<tab>'
