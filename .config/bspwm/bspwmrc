@@ -13,4 +13,10 @@ bspc config borderless_monocle  true
 bspc config gapless_monocle true
 bspc config single_monocle true
 
+bspc rule -a Emacs state=tiled
+
 $XDG_CONFIG_HOME/polybar/launch.sh
+
+#if [ -f $XDG_CONFIG_HOME/keybindings.sh ]; then
+#    $XDG_CONFIG_HOME/keybindings.sh &
+#fi

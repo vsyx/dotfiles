@@ -31,6 +31,7 @@
 ! white
 *.color7: #a0a0a0
 *.color15: #ffffff
+!*.background: #000000
 
 !background
 *.color256: #000000
@@ -38,6 +39,8 @@
 *.color257: #93a1a1
 !cursor
 *.color258: #d3d3d3
+
+
 
 !*.font: monospace:pixelsize=14:antialias=true:autohint=true;
 !*.alpha: 0.9

@@ -33,6 +33,8 @@ super + {_,shift + }f
 
 super + b 
     wm_action toggle_polybar
+super + a
+    xbacklight -dec 5
 
 # Toggle floating
 super + shift + space 

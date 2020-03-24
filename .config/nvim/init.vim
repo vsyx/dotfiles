@@ -20,6 +20,7 @@ call plug#begin()
 	Plug 'tpope/vim-vinegar'
 	Plug 'morhetz/gruvbox'
 	Plug 'Yggdroot/indentLine'
+	Plug 'luochen1990/rainbow'
 
 	Plug 'bling/vim-airline' 
 	Plug 'vim-airline/vim-airline-themes'
@@ -27,21 +28,20 @@ call plug#begin()
 	Plug 'junegunn/fzf.vim'
 call plug#end()
 
+let g:rainbow_active = 1
+let g:indentLine_enabled = 0
 
-let myCustomFiletype = 'java'
 augroup Compile_commands
     autocmd! 
-    autocmd FileType myCustomFiletype nnoremap <silent> <F5> :call CompileJava()<CR>
+    autocmd FileType java nnoremap <silent> <F5> :call CompileJava()<CR>
 augroup END
 
 function! CompileJava()
     let l:proj_root = Get_project_root()
     let l:command = ""
 
-    if !empty(l:proj_root) 
-        if filereadable(l:proj_root . '/pom.xml')
-            let l:command = systemlist('(cd '.l:proj_root.';mvn compile exec:java -q)')
-        endif
+    if !empty(l:proj_root) && filereadable(l:proj_root . '/pom.xml')
+        let l:command = systemlist('(cd '.l:proj_root.';mvn compile exec:java -q)')
     else
         let l:command = systemlist('java '. expand('%'))
     endif
@@ -66,12 +66,12 @@ nnoremap <leader><space> <Nop>
 
 nnoremap gs gT
 
-nnoremap <leader>q :q       <CR>
-nnoremap <leader>h :lefta vsp  <bar>Explore<CR>
-nnoremap <leader>l :vs         <bar>Explore<CR>
-nnoremap <leader>j :sp         <bar>Explore<CR>
-nnoremap <leader>k :above sp   <bar>Explore<CR>
-nnoremap <leader>w :tabe <CR>
+nnoremap <leader>q :q <CR>
+nnoremap <leader>h :leftabove new <bar>Explore<CR>
+nnoremap <leader>l :vsp <bar>Explore<CR>
+nnoremap <leader>j :sp <bar>Explore<CR>
+nnoremap <leader>k :aboveleft new <bar>Explore<CR>
+nnoremap <leader>w :Texplore <CR>
 
 " Spaces & tabs
 set tabstop=4       " number of visual spaces per TAB
@@ -80,13 +80,16 @@ set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " tabs are space
 set autoindent
 set copyindent      " copy indent from the previous line
+set mps+=<:>,`:`,':',":",=:;
+set scrolloff=5
+set nojoinspaces "J 1 space instead of 2
 
 " Misc
 set mouse=a " tmux scrolling
 set number
 set rnu
 set formatoptions+=t
-set showmatch
+set noshowmatch
 set ignorecase
 set splitbelow
 set splitright
@@ -174,8 +177,8 @@ endfunction
 "endfunction
 
 
-nnoremap <M-g> :call ProjectFiles()<CR>
-nnoremap <M-f> :Files~<CR>
+"nnoremap <C-S> :Files~<CR>
+nnoremap <C-s> :call ProjectFiles()<CR>
 nnoremap <M-b> :Buffers<CR>
 
 set hidden
@@ -194,16 +197,16 @@ endfunction
 
 inoremap <silent><expr> <TAB>
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ pumvisible() ? coc#_select_confirm() :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+      \ pumvisible() ? coc#_select_confirm() : "\<TAB>"
+      "\ <SID>check_back_space() ? "\<TAB>" :
+      "\ coc#refresh()
 "inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <expr> <cr> complete_info(['selected'])["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+"function! s:check_back_space() abort
+"  let col = col('.') - 1
+"  return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -218,7 +221,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>c  <Plug>(coc-codeaction)
+nmap <leader>x  <Plug>(coc-codeaction)
 nmap <leader>q  <Plug>(coc-fix-current)
 xmap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)

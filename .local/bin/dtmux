@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 tmux new-session \; \
-    send-keys 'vimfzf' C-m \; \
+    send-keys  C-m \; \
     split-window -h -p 22 \; \
     new-window \; \
     selectw -t 1 \; \

@@ -19,6 +19,10 @@ function! floating_window#OpenFloatingWindow(string)
 
     let l:buf_id = nvim_create_buf(v:false, v:false)
     let l:max_width = s:max_str_width(l:str_list)
+    if l:max_width == 0
+        echom 'Empty response'
+        return
+    endif
 
     call nvim_buf_set_lines(l:buf_id, 0, len(l:str_list), v:false, l:str_list)
     let l:win_id = nvim_open_win(l:buf_id, v:false, { 

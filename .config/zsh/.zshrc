@@ -47,7 +47,8 @@ setopt PROMPT_SUBST
 git_branch() {
     echo "%F{197}$(git symbolic-ref --short HEAD 2> /dev/null)%f"
 }
-PROMPT='%F{205}%5c%f $(git_branch) '
+
+PROMPT='%F{161}%5c%f $(git_branch) '
 
 #Autojump
 [[ -s /home/tixxy/.autojump/etc/profile.d/autojump.sh ]] && source /home/tixxy/.autojump/etc/profile.d/autojump.sh
@@ -87,18 +88,28 @@ function x11-clip-wrap-widgets() {
     done
 }
 
+# Prevent nested lf sessions
+function lf() {
+    if [ ! -z "$LF_LEVEL" ]; then
+        exit
+    else
+        /usr/local/bin/lf
+    fi
+}
+zle -N lf
 
 local copy_widgets=(
     vi-yank vi-yank-eol 
 )
+
 local paste_widgets=(
     vi-put-{before,after}
 )
 
-# NB: can atm. only wrap native widgets
 x11-clip-wrap-widgets copy $copy_widgets
 x11-clip-wrap-widgets paste  $paste_widgets
 
+export LS_COLORS='di=1;35:fi=0:ln=90:ex=92'
+
 # Syntax highlight has to be at the end
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
