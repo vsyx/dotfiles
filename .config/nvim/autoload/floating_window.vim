@@ -1,5 +1,22 @@
 let s:floating_win = {}
 
+augroup Compile_commands
+    autocmd! 
+    autocmd FileType java nnoremap <silent> <F5> :call floating_window#CompileJava()<CR>
+augroup END
+
+function! floating_window#CompileJava()
+    let l:proj_root = Get_project_root()
+    let l:command = ""
+
+    if !empty(l:proj_root) && filereadable(l:proj_root . '/pom.xml')
+        let l:command = systemlist('(cd '.l:proj_root.';mvn compile exec:java -q)')
+    else
+        let l:command = systemlist('java '. expand('%'))
+    endif
+    call floating_window#OpenFloatingWindow(l:command)
+endfunction
+
 function! s:max_str_width(strlist)
     let l:max = 0
     for str in a:strlist

@@ -28,25 +28,10 @@ call plug#begin()
 	Plug 'junegunn/fzf.vim'
 call plug#end()
 
+runtime autoload/floating_window.vim
+
 let g:rainbow_active = 1
 let g:indentLine_enabled = 0
-
-augroup Compile_commands
-    autocmd! 
-    autocmd FileType java nnoremap <silent> <F5> :call CompileJava()<CR>
-augroup END
-
-function! CompileJava()
-    let l:proj_root = Get_project_root()
-    let l:command = ""
-
-    if !empty(l:proj_root) && filereadable(l:proj_root . '/pom.xml')
-        let l:command = systemlist('(cd '.l:proj_root.';mvn compile exec:java -q)')
-    else
-        let l:command = systemlist('java '. expand('%'))
-    endif
-    call floating_window#OpenFloatingWindow(l:command)
-endfunction
 
 "Coc extensions
 let g:coc_global_extensions = [
