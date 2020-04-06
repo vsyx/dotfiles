@@ -1,9 +1,7 @@
 #!/usr/bin/env sh
 
 tmux new-session \; \
-    send-keys  C-m \; \
-    split-window -h -p 22 \; \
+    split-window -h -p 20 \; \
     new-window \; \
     selectw -t 1 \; \
-    selectp -t 1 \;
-
+    selectp -t 1 \; \

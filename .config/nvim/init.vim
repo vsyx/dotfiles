@@ -2,6 +2,12 @@ set nocompatible
 filetype plugin indent on
 syntax enable 
 
+"Toggles for various utils
+let g:coc_start_at_startup = 1
+let g:rainbow_active = 1
+let g:indentLine_enabled = 0
+let g:load_doxygen_syntax=1
+
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 	      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -27,11 +33,7 @@ call plug#begin()
 	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 	Plug 'junegunn/fzf.vim'
 call plug#end()
-
 runtime autoload/floating_window.vim
-
-let g:rainbow_active = 1
-let g:indentLine_enabled = 0
 
 "Coc extensions
 let g:coc_global_extensions = [
@@ -57,6 +59,14 @@ nnoremap <leader>l :vsp <bar>Explore<CR>
 nnoremap <leader>j :sp <bar>Explore<CR>
 nnoremap <leader>k :aboveleft new <bar>Explore<CR>
 nnoremap <leader>w :Texplore <CR>
+nnoremap <unique> <c-9> <Plug>NetrwRefresh
+
+tnoremap <Esc> <C-\><C-n>
+autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
+
+nnoremap <M-s> :Files~<CR>
+nnoremap <C-s> :call ProjectFiles()<CR>
+nnoremap <m-b> :Buffers<CR>
 
 " Spaces & tabs
 set tabstop=4       " number of visual spaces per TAB
@@ -65,9 +75,14 @@ set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " tabs are space
 set autoindent
 set copyindent      " copy indent from the previous line
-set mps+=<:>,`:`,':',":",=:;
+set mps+=<:>
 set scrolloff=5
 set nojoinspaces "J 1 space instead of 2
+set fillchars=eob:\ 
+set numberwidth=1
+set pumblend=15
+set winblend=15
+hi PmenuSel blend=0
 
 " Misc
 set mouse=a " tmux scrolling
@@ -88,7 +103,6 @@ let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme="badcat"
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
 colorscheme hashpunk-sweet
 highlight Normal guibg=none
 
@@ -96,13 +110,12 @@ if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
 endif
 
 "Syntax
-let g:load_doxygen_syntax=1
 
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
@@ -162,9 +175,6 @@ endfunction
 "endfunction
 
 
-"nnoremap <C-S> :Files~<CR>
-nnoremap <C-s> :call ProjectFiles()<CR>
-nnoremap <M-b> :Buffers<CR>
 
 set hidden
 set nobackup

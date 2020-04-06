@@ -1,3 +1,12 @@
 set promptfmt "\033[35;1m%u@%h\033[0m:\033[35;1m%w/\033[0m\033[1m%f\033[0m"
 set color256
 set previewer bbat
+
+cmd tedit ${{
+    $EDITOR -O $(echo "$fx" | tr '\n' ' ')
+}}
+
+map o &$OPENER $f
+map e tedit
+
+cmd open 

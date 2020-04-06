@@ -9,18 +9,20 @@ if [ "$(command -v bbat)" ]; then
 fi
 
 export FZF_DEFAULT_COMMAND="fd -H -t f . --ignore-file $IGNORE_FILE"
-export FZF_DEFAULT_OPTS="$FZF_COLORS --height 50% --reverse -m ${PREVIEWER}" 
+export FZF_DEFAULT_OPTS="$FZF_COLORS --height 50% --reverse" 
+
+#export FZF_DEFAULT_OPTS="$FZF_COLORS --height 50% --reverse -m ${PREVIEWER}" 
 #export FZF_CTRL_T_COMMAND="fd -H -t f --ignore-file $IGNORE_FILE . ~"
 
 ctrl_t_fzf() {
-    LBUFFER="${LBUFFER}$(fd -H -t f --ignore-file $IGNORE_FILE . ~ | fzf --reverse --delimiter / --with-nth 4.. | tr '\n' ' ')"
+    LBUFFER="${LBUFFER}$(fd -H -t f --ignore-file $IGNORE_FILE . ~ | fzf -m --reverse --delimiter / --with-nth 4.. | tr '\n' ' ')"
     zle reset-prompt
 }
 zle -N ctrl_t_fzf
 bindkey '^T' ctrl_t_fzf
 
 cdfzf() {
-    local dir=$(fd -H -t d --ignore-file $IGNORE_FILE . ~ | fzf --reverse --delimiter / --with-nth 4.. +m --preview='ls {}')
+    local dir=$(fd -H -t d --ignore-file $IGNORE_FILE . ~ | fzf --reverse --delimiter / --with-nth 4.. +m)
     if [ $dir ]; then
         cd "$dir"
         clear
@@ -34,12 +36,13 @@ bindkey '^Q' cdfzf
 # global
 
 vimfzf() {
-    local files=$(fd -H -t f --ignore-file $IGNORE_FILE . . | fzf)
+    local files=$(fd -H -t f --ignore-file $IGNORE_FILE . . | fzf -m)
     if [ $files ]; then
         nvim $(echo "$files" | tr "\n" " ") -O
+        preexec
     fi
     zle reset-prompt
 }
 
 zle -N vimfzf
-bindkey '^O' vimfzf
+bindkey '^S' vimfzf

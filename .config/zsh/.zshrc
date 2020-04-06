@@ -53,10 +53,6 @@ PROMPT='%F{161}%5c%f $(git_branch) '
 #Autojump
 [[ -s /home/tixxy/.autojump/etc/profile.d/autojump.sh ]] && source /home/tixxy/.autojump/etc/profile.d/autojump.sh
 
-# fzf
-[ -f $XDG_CONFIG_HOME/fzf/fzf.zsh ] && source $XDG_CONFIG_HOME/fzf/fzf.zsh 
-#bindkey -r '^[c' # unbind default fzf cd search
-
 stty -ixon # unbind C-S
 stty -ixoff # unbind C-Q
 
@@ -88,16 +84,6 @@ function x11-clip-wrap-widgets() {
     done
 }
 
-# Prevent nested lf sessions
-function lf() {
-    if [ ! -z "$LF_LEVEL" ]; then
-        exit
-    else
-        /usr/local/bin/lf
-    fi
-}
-zle -N lf
-
 local copy_widgets=(
     vi-yank vi-yank-eol 
 )
@@ -112,4 +98,5 @@ x11-clip-wrap-widgets paste  $paste_widgets
 export LS_COLORS='di=1;35:fi=0:ln=90:ex=92'
 
 # Syntax highlight has to be at the end
+source $XDG_CONFIG_HOME/fzf/fzf.zsh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
