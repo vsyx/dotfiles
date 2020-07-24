@@ -8,5 +8,7 @@ cmd tedit ${{
 
 map o &$OPENER $f
 map e tedit
+map w quit
 
 cmd open 
+

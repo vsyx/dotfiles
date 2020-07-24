@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+bat --theme='GitHub' --pager=never --plain --color=always "$1"

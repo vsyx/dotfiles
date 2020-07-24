@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+SIDEBAR_WINDOW="${TMUX_SIDEBAR_WINDOW-:999}"
+PANE_TITLE="__SIDEBAR"
+SPLIT_OPTIONS="-hl 50"
+
+window_panes="$(tmux list-panes -F "#T #D")"
+pane="$(echo "$window_panes" | grep "$PANE_TITLE" | cut -d ' ' -f2)"
+zoomed="$(tmux display-message -p "#{window_zoomed_flag}")"
+active_pane="$(tmux display-message -p "#D")"
+
+if [[ "$pane" ]]; then
+    base_pane="$(echo "$window_panes" | grep -v "$(echo "$pane")" | head -n 1 | cut -d ' ' -f2)"
+    if [[ "$zoomed" == 1 ]]; then
+        if [[ "$active_pane" == "$pane" ]]; then
+            tmux select-pane -t "$base_pane"
+            tmux resize-pane -Z 
+        else
+            tmux select-pane -t "$pane"
+        fi
+    else
+        tmux resize-pane -Z -t "$base_pane"
+    fi
+else
+    tmux select-pane -T "$PANE_TITLE" -t "$(tmux split-window -fPF "#D" "$SPLIT_OPTIONS")"
+fi
+
+#pane="$(tmux list-panes -F "#T #D" | grep "$PANE_TITLE")"
+#window_id="$(tmux display-message -p "#{window_id}")"
+#target_window_pane=$(tmux list-panes -t "$SIDEBAR_WINDOW" -F "#D" 2>/dev/null | head -n 1)
+#
+#if [[ "$pane" ]]; then
+#    pane_id=$(echo "$pane" | cut -d ' ' -f2)
+#    ([ ! "$target_window_pane" ] && tmux break-pane -t "$SIDEBAR_WINDOW" -ds "$pane_id" \
+#        || tmux join-pane -ds "$pane_id" -t "$target_window_pane") \
+#        && tmux set-buffer -b "$PANE_TITLE_$window_id" "$pane_id"
+#else
+#    buffer_contents="$(tmux show-buffer -b "$PANE_TITLE_$window_id" 2>/dev/null)"
+#    exists="$(tmux display-message -pt "$buffer_contents" 2>/dev/null)"
+#
+#    if [[ "$buffer_contents" && "$exists" ]]; then
+#        DUMMY="$(tmux split-window -Pf "$SPLIT_OPTIONS")" 
+#        LAYOUT="$(tmux list-windows -F "#{?window_active,#{window_layout},}" | grep -v '^$')"
+#        tmux kill-pane -t "$DUMMY"
+#        tmux join-pane -s "$buffer_contents" "$SPLIT_OPTIONS" -t "$(tmux list-panes -F "#D" | tail -n 1)"
+#        tmux select-layout "$LAYOUT"
+#    else
+#        tmux select-pane -T "$PANE_TITLE" -t "$(tmux split-window -fPF "#D" "$SPLIT_OPTIONS")"
+#    fi
+#fi
+#exit 0

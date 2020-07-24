@@ -6,7 +6,10 @@ syntax enable
 let g:coc_start_at_startup = 1
 let g:rainbow_active = 1
 let g:indentLine_enabled = 0
-let g:load_doxygen_syntax=1
+let g:load_doxygen_syntax = 1
+let g:colorizer_auto_filetype = 'css,html'
+
+let g:android_sdk_path = "/home/tixxy/Android/Sdk"
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -18,28 +21,52 @@ call plug#begin()
 
 	Plug 'jiangmiao/auto-pairs'	
 	Plug 'scrooloose/nerdcommenter'
+	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+	Plug 'junegunn/fzf.vim'
+	Plug 'bling/vim-airline' 
+	Plug 'justinmk/vim-sneak'
+	Plug 'sunaku/vim-dasht'
+	Plug 'lambdalisue/fern.vim'
 
 	Plug 'vim-scripts/DoxygenToolkit.vim'
 	Plug 'chemzqm/vim-jsx-improve'
-	Plug 'christoomey/vim-tmux-navigator' 
 	Plug 'dhruvasagar/vim-table-mode'
-	Plug 'tpope/vim-vinegar'
 	Plug 'morhetz/gruvbox'
-	Plug 'Yggdroot/indentLine'
 	Plug 'luochen1990/rainbow'
+	Plug 'alvan/vim-closetag'
+	Plug 'tpope/vim-dadbod'
+	Plug 'tommcdo/vim-lion'
+	Plug 'chrisbra/Colorizer'
+	Plug 'sheerun/vim-polyglot'
+	"Plug 'hsanson/vim-android'
 
-	Plug 'bling/vim-airline' 
-	Plug 'vim-airline/vim-airline-themes'
-	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-	Plug 'junegunn/fzf.vim'
+	"Plug 'christoomey/vim-tmux-navigator' 
+	"Plug 'tpope/vim-vinegar'
+	"Plug 'justinmk/vim-dirvish'
+	"Plug 'vim-airline/vim-airline-themes'
+	"Plug 'Yggdroot/indentLine'
 call plug#end()
 runtime autoload/floating_window.vim
+
+augroup filetype-changes
+    autocmd!
+    autocmd BufEnter *.fxml set ft=html
+augroup END
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
+let g:closetag_filetypes = 'html,xhtml,phtml,xml'
+
+nnoremap <silent> gK :call Dasht([expand('<cword>'), expand('<cWORD>')])<CR>
 
 "Coc extensions
 let g:coc_global_extensions = [
             \'coc-snippets',
             \'coc-tsserver',
-            \'coc-tslint-plugin',
             \'coc-python',
             \'coc-java',
             \'https://github.com/xabikos/vscode-javascript',
@@ -50,25 +77,20 @@ let g:coc_global_extensions = [
 "let mapleader=" "
 map <SPACE> <leader>
 nnoremap <leader><space> <Nop>
-
 nnoremap gs gT
-
-nnoremap <leader>q :q <CR>
-nnoremap <leader>h :leftabove new <bar>Explore<CR>
-nnoremap <leader>l :vsp <bar>Explore<CR>
-nnoremap <leader>j :sp <bar>Explore<CR>
-nnoremap <leader>k :aboveleft new <bar>Explore<CR>
-nnoremap <leader>w :Texplore <CR>
-nnoremap <unique> <c-9> <Plug>NetrwRefresh
-
+nnoremap <silent> <leader>q :q <CR>
+nnoremap <silent> <leader>h :leftabove new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>l :vsp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
 tnoremap <Esc> <C-\><C-n>
+nnoremap <M-s> :Files~<CR>
+nnoremap <silent><C-s> :call ProjectFiles()<CR>
+nnoremap <m-b> :Buffers<CR>
 autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
 
-nnoremap <M-s> :Files~<CR>
-nnoremap <C-s> :call ProjectFiles()<CR>
-nnoremap <m-b> :Buffers<CR>
-
-" Spaces & tabs
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
@@ -82,9 +104,6 @@ set fillchars=eob:\
 set numberwidth=1
 set pumblend=15
 set winblend=15
-hi PmenuSel blend=0
-
-" Misc
 set mouse=a " tmux scrolling
 set number
 set rnu
@@ -93,11 +112,60 @@ set noshowmatch
 set ignorecase
 set splitbelow
 set splitright
+hi PmenuSel blend=0
 
 "Netrw
-let g:netrw_liststyle = 3
-let g:netrw_banner = 0
-let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
+"let g:netrw_liststyle = 3
+"let g:netrw_banner = 0
+"let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
+"nnoremap <silent> <unique> <c-9> <Plug>NetrwRefresh
+"
+let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
+
+function! s:smart_path() abort
+  if !empty(&buftype) || bufname('%') =~# '^[^:]\+://'
+    return fnamemodify('.', ':p')
+  endif
+  return fnamemodify(expand('%'), ':p:h')
+endfunctio
+
+function! s:init_fern() abort
+  nunmap <buffer> <C-h>
+  nunmap <buffer> <C-j>
+  nunmap <buffer> <C-k>
+  nunmap <buffer> <C-l>
+  nmap <buffer><expr>
+        \ <Plug>(fern-my-collapse-or-leave)
+        \ fern#smart#drawer(
+        \   "\<Plug>(fern-action-collapse)",
+        \   "\<Plug>(fern-action-leave)",
+        \ )
+  nmap <buffer><nowait> - <Plug>(fern-my-collapse-or-leave)
+  nmap <buffer><nowait> S <Plug>(fern-action-mark-toggle)
+endfunction
+
+augroup fern-custom
+  autocmd! *
+  autocmd FileType fern call s:init_fern()
+augroup END
+
+" Disable netrw
+let g:loaded_netrw             = 1
+let g:loaded_netrwPlugin       = 1
+let g:loaded_netrwSettings     = 1
+let g:loaded_netrwFileHandlers = 1
+
+augroup my-fern-hijack
+  autocmd!
+  autocmd BufEnter * ++nested call <SID>hijack_directory()
+augroup END
+
+function! s:hijack_directory() abort
+  if !isdirectory(expand('%'))
+    return
+  endif
+  exec 'Fern '. expand('%')
+endfunction
 
 "Looks
 let g:airline#extensions#tabline#enabled = 1
@@ -114,8 +182,6 @@ if exists('+termguicolors')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
-
-"Syntax
 
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
@@ -169,12 +235,16 @@ function! ProjectFiles()
     endif
 endfunction
 
+"augroup remember_folds
+"  autocmd!
+"  autocmd BufWinLeave * mkview
+"  autocmd BufWinEnter * silent! loadview
+"augroup END
+
 "function! ExploreProject()
 "    let root = s:get_project_root()
 "    call fzf#run(fzf#wrap({'source': 'fd -t d', 'dir': root, 'sink': 'Explore'}))
 "endfunction
-
-
 
 set hidden
 set nobackup
@@ -184,19 +254,10 @@ set updatetime=300
 set shortmess+=c
 set signcolumn=yes
 
-function IsSnippet()
-    let pumState = complete_info(['selected', 'items'])
-    let pumIndex = pumState.selected >= 0 ? pumState.selected : 0
-    return len(pumState.items) && pumState['items'][pumIndex]['kind'] == 'S'
-endfunction
-
 inoremap <silent><expr> <TAB>
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ pumvisible() ? coc#_select_confirm() : "\<TAB>"
-      "\ <SID>check_back_space() ? "\<TAB>" :
-      "\ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-inoremap <expr> <cr> complete_info(['selected'])["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+    \ coc#expandableOrJumpable() && !pumvisible() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+    \ pumvisible() ? coc#_select_confirm() : "\<TAB>"
+"inoremap <expr> <cr> complete_info(['selected'])["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
 "function! s:check_back_space() abort
 "  let col = col('.') - 1
@@ -240,6 +301,4 @@ endfunction
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight') 
-"| call CocActionAsync('doHover')
-
 "echo synIDattr(synID(line("."), col("."), 1), NAME_FG_BG)

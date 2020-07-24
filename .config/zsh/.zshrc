@@ -95,7 +95,7 @@ local paste_widgets=(
 x11-clip-wrap-widgets copy $copy_widgets
 x11-clip-wrap-widgets paste  $paste_widgets
 
-export LS_COLORS='di=1;35:fi=0:ln=90:ex=92'
+export LS_COLORS='di=1;35:fi=0:ln=90:ex=92:tw=0:ow=0'
 
 # Syntax highlight has to be at the end
 source $XDG_CONFIG_HOME/fzf/fzf.zsh
