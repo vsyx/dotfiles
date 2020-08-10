@@ -8,6 +8,7 @@ let g:rainbow_active = 1
 let g:indentLine_enabled = 0
 let g:load_doxygen_syntax = 1
 let g:colorizer_auto_filetype = 'css,html'
+let g:AutoPairsShortcutToggle = ''
 
 let g:android_sdk_path = "/home/tixxy/Android/Sdk"
 
@@ -21,11 +22,9 @@ call plug#begin()
 
 	Plug 'jiangmiao/auto-pairs'	
 	Plug 'scrooloose/nerdcommenter'
-	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-	Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
 	Plug 'bling/vim-airline' 
-	Plug 'justinmk/vim-sneak'
-	Plug 'sunaku/vim-dasht'
 	Plug 'lambdalisue/fern.vim'
 
 	Plug 'vim-scripts/DoxygenToolkit.vim'
@@ -34,19 +33,22 @@ call plug#begin()
 	Plug 'morhetz/gruvbox'
 	Plug 'luochen1990/rainbow'
 	Plug 'alvan/vim-closetag'
-	Plug 'tpope/vim-dadbod'
 	Plug 'tommcdo/vim-lion'
-	Plug 'chrisbra/Colorizer'
+	Plug 'chrisbra/Colorizer' 
 	Plug 'sheerun/vim-polyglot'
+	Plug 'arecarn/vim-crunch'
+	
+	"Plug 'justinmk/vim-sneak'
 	"Plug 'hsanson/vim-android'
-
+	"Plug 'tpope/vim-dadbod' DB wrapper
+	"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+	"Plug 'sunaku/vim-dasht'
 	"Plug 'christoomey/vim-tmux-navigator' 
-	"Plug 'tpope/vim-vinegar'
+	"Plug 'tpope/vim-vinegar' lightweight fern
 	"Plug 'justinmk/vim-dirvish'
 	"Plug 'vim-airline/vim-airline-themes'
 	"Plug 'Yggdroot/indentLine'
 call plug#end()
-runtime autoload/floating_window.vim
 
 augroup filetype-changes
     autocmd!
@@ -58,10 +60,13 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+nnoremap <M-y> "+y
+vnoremap <M-y> "+y
+
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
 let g:closetag_filetypes = 'html,xhtml,phtml,xml'
 
-nnoremap <silent> gK :call Dasht([expand('<cword>'), expand('<cWORD>')])<CR>
+"nnoremap <silent> gK :call Dasht([expand('<cword>'), expand('<cWORD>')])<CR>
 
 "Coc extensions
 let g:coc_global_extensions = [
@@ -85,11 +90,11 @@ nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
-tnoremap <Esc> <C-\><C-n>
-nnoremap <M-s> :Files~<CR>
 nnoremap <silent><C-s> :call ProjectFiles()<CR>
+tnoremap <Esc> <C-\><C-n>
 nnoremap <m-b> :Buffers<CR>
 autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
+
 
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
@@ -112,6 +117,13 @@ set noshowmatch
 set ignorecase
 set splitbelow
 set splitright
+set hidden
+set nobackup
+set nowritebackup
+set cmdheight=1
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
 hi PmenuSel blend=0
 
 "Netrw
@@ -183,20 +195,6 @@ if exists('+termguicolors')
     set termguicolors
 endif
 
-" Zoom / Restore window.
-function! s:ZoomToggle() abort
-    if exists('t:zoomed') && t:zoomed
-        execute t:zoom_winrestcmd
-        let t:zoomed = 0
-    else
-        let t:zoom_winrestcmd = winrestcmd()
-        resize
-        vertical resize
-        let t:zoomed = 1
-    endif
-endfunction
-command! ZoomToggle call s:ZoomToggle()
-nnoremap <silent> <C-A> :ZoomToggle<CR>
 
 function! s:get_git_root()
     let l:res = split(system('git rev-parse --show-toplevel'), '\n')[0]
@@ -235,6 +233,7 @@ function! ProjectFiles()
     endif
 endfunction
 
+
 "augroup remember_folds
 "  autocmd!
 "  autocmd BufWinLeave * mkview
@@ -246,13 +245,6 @@ endfunction
 "    call fzf#run(fzf#wrap({'source': 'fd -t d', 'dir': root, 'sink': 'Explore'}))
 "endfunction
 
-set hidden
-set nobackup
-set nowritebackup
-set cmdheight=1
-set updatetime=300
-set shortmess+=c
-set signcolumn=yes
 
 inoremap <silent><expr> <TAB>
     \ coc#expandableOrJumpable() && !pumvisible() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -302,3 +294,27 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight') 
 "echo synIDattr(synID(line("."), col("."), 1), NAME_FG_BG)
+
+"smart indent when entering insert mode with i on empty lines
+"function! IndentWithI()
+    "if len(getline('.')) == 0
+        "return "\"_cc"
+    "else
+        "return "i"
+    "endif
+"endfunction
+"nnoremap <expr> i IndentWithI()
+
+" Zoom / Restore window.
+"function! s:ZoomToggle() abort
+    "if exists('t:zoomed') && t:zoomed
+        "execute t:zoom_winrestcmd
+        "let t:zoomed = 0
+    "else
+        "let t:zoom_winrestcmd = winrestcmd()
+        "resize
+        "vertical resize
+        "let t:zoomed = 1
+    "endif
+"endfunction
+"command! ZoomToggle call s:ZoomToggle()

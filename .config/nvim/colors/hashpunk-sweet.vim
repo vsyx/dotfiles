@@ -51,7 +51,6 @@ endfunction
 " For reference on what each group does, please refer to this:
 " vimdoc.sourceforge.net/htmldoc/syntax.html
 "
-
 call s:highlight('StatusLine', s:Grey93, s:clear, s:none)
 
 call s:highlight('markdownItalic', s:Grey93, s:clear, s:italic)

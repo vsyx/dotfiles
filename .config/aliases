@@ -12,7 +12,7 @@ alias dotconfig='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias grep='grep --color=auto'
 
 nviml() {
-    nvim -u $CONFIG/nvim/lightinit.vim $@
+    nvim -u $XDG_CONFIG_HOME/nvim/lightinit.vim $@
 }
 
 nman() {
@@ -61,5 +61,4 @@ alias expacsize="expac -S -H M '%kt %n'"
 alias expacdate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail"
 alias dmenu="dmenu -nb #000000"
 alias firefoxp="firefox --private-window"
-alias winedrive='WINEPREFIX=$HOME/Drives/seagate/wine32 WINEARCH=win32 '
 alias clipimage='xclip -selection clipboard -t image/jpeg -o >'

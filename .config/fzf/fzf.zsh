@@ -1,5 +1,12 @@
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Fuzzy completion
+[[ $- == *i* ]] && source "$HOME/.config/nvim/plugged/fzf/shell/completion.zsh" 2> /dev/null
+
+# Key bindings
+# ------------
+source "$HOME/.config/nvim/plugged/fzf/shell/key-bindings.zsh"
+
 declare IGNORE_FILE=$XDG_CONFIG_HOME/fzf/ignore.txt
 declare FZF_COLORS=$FZF_DEFAULT_OPTS' --color=fg:#d0d0d0,bg:-1,hl:#d7005f --color=fg+:#d0d0d0,bg+:-1,hl+:#5fd7ff --color=info:#afaf87,prompt:#d7005f,pointer:#d7008f --color=marker:#87ff00,spinner:#af5fff,header:#87afaf'
 
@@ -44,3 +51,4 @@ bindkey '^Q' cdfzf
 
 #zle -N vimfzf
 #bindkey '^S' vimfzf
+

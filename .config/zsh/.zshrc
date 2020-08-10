@@ -92,6 +92,14 @@ local paste_widgets=(
     vi-put-{before,after}
 )
 
+function run-again {
+    zle up-history
+    zle accept-line
+}
+zle -N run-again
+bindkey '^P' run-again 
+bindkey -M vicmd '^P' run-again 
+
 x11-clip-wrap-widgets copy $copy_widgets
 x11-clip-wrap-widgets paste  $paste_widgets
 
@@ -100,3 +108,5 @@ export LS_COLORS='di=1;35:fi=0:ln=90:ex=92:tw=0:ow=0'
 # Syntax highlight has to be at the end
 source $XDG_CONFIG_HOME/fzf/fzf.zsh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
