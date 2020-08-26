@@ -2,6 +2,13 @@ set nocompatible
 filetype plugin indent on
 syntax enable 
 
+hi airline_term guibg=black guifg=black
+hi airline_term_bold guibg=black guifg=black
+hi airline_term_inactive guibg=black guifg=black
+hi airline_term_inactive_bold guibg=black guifg=black
+hi airline_term_inactive_red guibg=black guifg=black
+
+
 "Toggles for various utils
 let g:coc_start_at_startup = 1
 let g:rainbow_active = 1
@@ -9,13 +16,14 @@ let g:indentLine_enabled = 0
 let g:load_doxygen_syntax = 1
 let g:colorizer_auto_filetype = 'css,html'
 let g:AutoPairsShortcutToggle = ''
+let g:AutoPairsFlyMode = 0
 
-let g:android_sdk_path = "/home/tixxy/Android/Sdk"
+let s:PLUG_VIM = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
 
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-	      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+if empty(s:PLUG_VIM)
+	  silent execute '!curl -fLo' . s:PLUG_VIM . '--create-dirs' \
+	  . 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+	  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 	endif
 call plug#begin()
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -30,14 +38,27 @@ call plug#begin()
 	Plug 'vim-scripts/DoxygenToolkit.vim'
 	Plug 'chemzqm/vim-jsx-improve'
 	Plug 'dhruvasagar/vim-table-mode'
-	Plug 'morhetz/gruvbox'
-	Plug 'luochen1990/rainbow'
+	Plug 'luochen1990/rainbow' 
+	Plug 'chrisbra/Colorizer' " Colorize hex
 	Plug 'alvan/vim-closetag'
-	Plug 'tommcdo/vim-lion'
-	Plug 'chrisbra/Colorizer' 
+	Plug 'tommcdo/vim-lion' " Aligment, g[l L]i{section | / for pattern}
 	Plug 'sheerun/vim-polyglot'
-	Plug 'arecarn/vim-crunch'
+	Plug 'arecarn/vim-crunch' " calculator g==
+	Plug 'junegunn/vim-after-object'
+	autocmd VimEnter * silent! call after_object#enable('=', ':', '#', ' ', '|')
+
+	Plug 'junegunn/vim-slash'
+	Plug 'machakann/vim-highlightedyank'
+	Plug 'mbbill/undotree'
+	Plug 'michaeljsmith/vim-indent-object' 
+	Plug 'voldikss/vim-floaterm'
 	
+	"Git
+	"Plug 'tpope/vim-fugitive'
+	"Plug 'mhinz/vim-signify'
+	"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
+	"Plug 'morhetz/gruvbox'
 	"Plug 'justinmk/vim-sneak'
 	"Plug 'hsanson/vim-android'
 	"Plug 'tpope/vim-dadbod' DB wrapper
@@ -48,25 +69,8 @@ call plug#begin()
 	"Plug 'justinmk/vim-dirvish'
 	"Plug 'vim-airline/vim-airline-themes'
 	"Plug 'Yggdroot/indentLine'
+	"Plug 'kristijanhusak/vim-carbon-now-sh' sharing code pics
 call plug#end()
-
-augroup filetype-changes
-    autocmd!
-    autocmd BufEnter *.fxml set ft=html
-augroup END
-
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
-nnoremap <M-y> "+y
-vnoremap <M-y> "+y
-
-let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
-let g:closetag_filetypes = 'html,xhtml,phtml,xml'
-
-"nnoremap <silent> gK :call Dasht([expand('<cword>'), expand('<cWORD>')])<CR>
 
 "Coc extensions
 let g:coc_global_extensions = [
@@ -80,6 +84,13 @@ let g:coc_global_extensions = [
 
 "Mappings
 "let mapleader=" "
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+nnoremap <M-y> "+y
+vnoremap <M-y> "+y
 map <SPACE> <leader>
 nnoremap <leader><space> <Nop>
 nnoremap gs gT
@@ -91,10 +102,16 @@ nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR>
 nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent><C-s> :call ProjectFiles()<CR>
-tnoremap <Esc> <C-\><C-n>
+nnoremap <silent><M-s> :call fzf#run(fzf#wrap({'source': 'fd -H -t f . ~', 
+            \'options': '--reverse --delimiter / --with-nth 4..'}))<CR>
 nnoremap <m-b> :Buffers<CR>
-autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
+tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
 
+if has('nvim') && !exists('g:fzf_layout')
+  autocmd! FileType fzf
+  autocmd  FileType fzf set laststatus=0 noshowmode noruler
+    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+endif
 
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
@@ -126,14 +143,40 @@ set shortmess+=c
 set signcolumn=yes
 hi PmenuSel blend=0
 
+"Looks
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme="badcat"
+let g:airline_powerline_fonts = 1
+colorscheme hashpunk-sweet
+highlight Normal guibg=none
+
+if (has("nvim"))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+
+let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
+
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
+let g:closetag_filetypes = 'html,xhtml,phtml,xml'
+
 "Netrw
 "let g:netrw_liststyle = 3
 "let g:netrw_banner = 0
 "let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
 "nnoremap <silent> <unique> <c-9> <Plug>NetrwRefresh
-"
-let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
 
+" Disable netrw
+let g:loaded_netrw             = 1
+let g:loaded_netrwPlugin       = 1
+let g:loaded_netrwSettings     = 1
+let g:loaded_netrwFileHandlers = 1
+
+" Fern
 function! s:smart_path() abort
   if !empty(&buftype) || bufname('%') =~# '^[^:]\+://'
     return fnamemodify('.', ':p')
@@ -161,12 +204,6 @@ augroup fern-custom
   autocmd FileType fern call s:init_fern()
 augroup END
 
-" Disable netrw
-let g:loaded_netrw             = 1
-let g:loaded_netrwPlugin       = 1
-let g:loaded_netrwSettings     = 1
-let g:loaded_netrwFileHandlers = 1
-
 augroup my-fern-hijack
   autocmd!
   autocmd BufEnter * ++nested call <SID>hijack_directory()
@@ -179,23 +216,8 @@ function! s:hijack_directory() abort
   exec 'Fern '. expand('%')
 endfunction
 
-"Looks
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme="badcat"
-let g:airline_powerline_fonts = 1
-colorscheme hashpunk-sweet
-highlight Normal guibg=none
 
-if (has("nvim"))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
-if exists('+termguicolors')
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-endif
-
-
+" Git search
 function! s:get_git_root()
     let l:res = split(system('git rev-parse --show-toplevel'), '\n')[0]
     return v:shell_error == 0 ? l:res : 0
@@ -233,11 +255,10 @@ function! ProjectFiles()
     endif
 endfunction
 
-
 "augroup remember_folds
-"  autocmd!
-"  autocmd BufWinLeave * mkview
-"  autocmd BufWinEnter * silent! loadview
+  "autocmd!
+  "autocmd BufWinLeave * mkview
+  "autocmd BufWinEnter * silent! loadview
 "augroup END
 
 "function! ExploreProject()
@@ -245,7 +266,7 @@ endfunction
 "    call fzf#run(fzf#wrap({'source': 'fd -t d', 'dir': root, 'sink': 'Explore'}))
 "endfunction
 
-
+"Coc
 inoremap <silent><expr> <TAB>
     \ coc#expandableOrJumpable() && !pumvisible() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
     \ pumvisible() ? coc#_select_confirm() : "\<TAB>"

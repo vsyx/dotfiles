@@ -11,4 +11,5 @@ map e tedit
 map w quit
 
 cmd open 
-
+set number
+set relativenumber

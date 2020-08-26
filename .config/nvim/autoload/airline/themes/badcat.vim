@@ -29,6 +29,8 @@ let s:ctermOrange    = "215"
 let s:modified = { 'airline_c': [ '#ffb964', '', s:ctermRed, '', '' ] }
 " }}}
 
+let s:airline_term = [s:guiWhite, s:guiBlack, s:ctermWhite, s:ctermBlack]
+
 
 " MODES SUPPORT
 " NORMAL MODE ---------------------------------------------------------------{{{
@@ -37,6 +39,8 @@ let s:N2 = [ s:guiLightgray , s:guiGray  , s:ctermLightgray , s:ctermGray  ]
 let s:N3 = [ s:guiWhite     , s:guiBlack , s:ctermWhite     , s:ctermBlack ]
 let g:airline#themes#badcat#palette.normal = airline#themes#generate_color_map(s:N1, s:N2, s:N3)
 let g:airline#themes#badcat#palette.normal_modified = s:modified
+let g:airline#themes#badcat#palette.normal.airline_term = s:airline_term
+
 " }}}
 " INSERT MODE ---------------------------------------------------------------{{{
 let s:I1 = [ s:guiGreen , s:guiBlack , s:ctermGreen , s:ctermBlack ]
@@ -44,6 +48,8 @@ let s:I2 = [ s:guiBlack , s:guiGreen , s:ctermBlack , s:ctermGreen ]
 let s:I3 = [ s:guiGreen , s:guiBlack , s:ctermGreen , s:ctermBlack ]
 let g:airline#themes#badcat#palette.insert = airline#themes#generate_color_map(s:I1, s:I2, s:I3)
 let g:airline#themes#badcat#palette.insert_modified = s:modified
+let g:airline#themes#badcat#palette.insert.airline_term = s:airline_term
+
 " }}}
 " VISUAL MODE ---------------------------------------------------------------{{{
 let s:V1 = [ s:guiBlue  , s:guiBlack , s:ctermBlue  , s:ctermBlack ]
@@ -51,6 +57,8 @@ let s:V2 = [ s:guiBlack , s:guiBlue  , s:ctermBlack , s:ctermBlue  ]
 let s:V3 = [ s:guiBlue  , s:guiBlack , s:ctermBlue  , s:ctermBlack ]
 let g:airline#themes#badcat#palette.visual = airline#themes#generate_color_map(s:V1, s:V2, s:V3)
 let g:airline#themes#badcat#palette.visual_modified = s:modified
+let g:airline#themes#badcat#palette.visual.airline_term = s:airline_term
+
 " }}}
 " REPLACE MODE --------------------------------------------------------------{{{
 let s:R1 = [ s:guiOrange , s:guiBlack  , s:ctermOrange , s:ctermBlack  ]
@@ -58,6 +66,8 @@ let s:R2 = [ s:guiBlack  , s:guiOrange , s:ctermBlack  , s:ctermOrange ]
 let s:R3 = [ s:guiOrange , s:guiBlack  , s:ctermOrange , s:ctermBlack  ]
 let g:airline#themes#badcat#palette.replace = airline#themes#generate_color_map(s:R1, s:R2, s:R3)
 let g:airline#themes#badcat#palette.replace_modified = s:modified
+let g:airline#themes#badcat#palette.replace.airline_term = s:airline_term
+
 " }}}
 " INACTIVE MODE -------------------------------------------------------------{{{
 let s:IN1 = [ s:guiBlack     , s:guiGray  , s:ctermBlack      , s:ctermGray  ]
@@ -65,8 +75,13 @@ let s:IN2 = [ s:guiLightgray , s:guiBlack , s:ctermLightgray , s:ctermBlack ]
 let s:IN3 = [ s:guiLightgray , s:guiBlack , s:ctermLightgray , s:ctermBlack ]
 let g:airline#themes#badcat#palette.inactive = airline#themes#generate_color_map(s:IN1, s:IN2, s:IN3)
 let g:airline#themes#badcat#palette.inactive_modified = s:modified
+let g:airline#themes#badcat#palette.inactive.airline_term = s:airline_term
 " }}}
 
+" }}}
+" TERMINAL
+let g:airline#themes#badcat#palette.terminal = airline#themes#generate_color_map(s:I1, s:I2, s:I3)
+let g:airline#themes#badcat#palette.terminal.airline_term = s:airline_term
 
 " SPECIFIC PLUGIN SUPPORT
 " CtrlP ---------------------------------------------------------------------{{{

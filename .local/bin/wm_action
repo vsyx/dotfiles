@@ -2,17 +2,17 @@
 
 case "$1" in 
     'select')
-        declare mode=`bspc query -T -d focused | jq '. | .layout'`
+        declare mode=`bspc query -T -d focused | grep -Po '(?<="layout":")[^"]*'`
+        #declare mode=`bspc query -T -d focused | jq '. | .layout'`
         declare dir="$3"
 
-        if [ "$mode" = '"monocle"' ]; then
-                case "$dir" in
-                            'north') dir='prev';;
-                                    'south') dir='next';;
-                                        esac
+        if [ "$mode" = 'monocle' ]; then
+            case "$dir" in
+                'north') dir='prev';;
+                'south') dir='next';;
+            esac
         fi
-
-        bspc node -"$2" "$dir".local
+        bspc node -"$2" "$dir".local.window
         ;;
     'resize')
         wid=$(xdotool getactivewindow)

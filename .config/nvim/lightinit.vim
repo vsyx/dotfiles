@@ -8,8 +8,8 @@ let g:indentLine_enabled = 0
 let g:load_doxygen_syntax = 0
 let g:colorizer_auto_filetype = 'css,html'
 
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+if empty(glob('$XDG_CONFIG_HOME/nvim/autoload/plug.vim'))
+	  silent !curl -fLo ~$XDG_CONFIG_HOME/nvim/autoload/plug.vim --create-dirs
 	      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 	endif

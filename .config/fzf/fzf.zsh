@@ -5,7 +5,9 @@
 
 # Key bindings
 # ------------
-source "$HOME/.config/nvim/plugged/fzf/shell/key-bindings.zsh"
+[ -f $HOME/.config/nvim/plugged/fzf/shell/key-bindings.zsh ] && source "$HOME/.config/nvim/plugged/fzf/shell/key-bindings.zsh"
+
+bindkey -r '^T' # remove default ctrl-t
 
 declare IGNORE_FILE=$XDG_CONFIG_HOME/fzf/ignore.txt
 declare FZF_COLORS=$FZF_DEFAULT_OPTS' --color=fg:#d0d0d0,bg:-1,hl:#d7005f --color=fg+:#d0d0d0,bg+:-1,hl+:#5fd7ff --color=info:#afaf87,prompt:#d7005f,pointer:#d7008f --color=marker:#87ff00,spinner:#af5fff,header:#87afaf'
@@ -26,7 +28,7 @@ ctrl_t_fzf() {
     zle reset-prompt
 }
 zle -N ctrl_t_fzf
-bindkey '^T' ctrl_t_fzf
+bindkey '^S' ctrl_t_fzf
 
 cdfzf() {
     local dir=$(fd -H -t d --ignore-file $IGNORE_FILE . ~ | fzf --reverse --delimiter / --with-nth 4.. +m)

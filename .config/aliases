@@ -1,19 +1,26 @@
-#!/usr/bin/env zsh
+#/usr/bin/env zsh
+
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias lla='ls -la'
-
-#function chpwd() { 
-#    emulate -L zsh
-#    ls -a
-#}
-
 alias dotconfig='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias grep='grep --color=auto'
 
-nviml() {
-    nvim -u $XDG_CONFIG_HOME/nvim/lightinit.vim $@
-}
+command -v tmux > /dev/null && alias tmux='tmux -f $XDG_CONFIG_HOME/.tmux.conf'
+
+alias topmem='ps axch ocmd:15,%mem | sort -uk 1.1,1.15 | sort -rk 1.16 | head'
+alias topcpu='ps axch ocmd:15,%cpu | sort -uk 1.1,1.15 | sort -rk 1.16 | head'
+
+if command -v expac > /dev/null; then
+    alias expacsize="expac -S -H M '%kt %n'"
+    alias expacdate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail"
+fi
+
+alias dmenu="dmenu -nb #000000"
+alias firefoxp="firefox --private-window"
+alias clipimage='xclip -selection clipboard -t image/jpeg -o >'
+
+command -v doas > /dev/null && ! type sudo > /dev/null && alias sudo='doas'
 
 nman() {
     nviml -Rc "Man $@ | on" 
@@ -29,36 +36,47 @@ man() {
     command man "$@"
 }
 
+if command -v bat > /dev/null; then
+    alias bat='bat --theme GitHub' -p
+fi
 
-#if [[ $(command -v bat) ]]; then
-#    alias bat='bat --theme GitHub'
-#fi
-
-
-lfcd () {
-    tmp="$(mktemp)"
-    /usr/local/bin/lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        if [ -d "$dir" ]; then
-            if [ "$dir" != "$(pwd)" ]; then
-                cd "$dir"
+if command -v lf > /dev/null; then
+    lfcd () {
+        tmp="$(mktemp)"
+        $(whereis lf | awk '{print $2}') -last-dir-path="$tmp" "$@"
+        if [ -f "$tmp" ]; then
+            dir="$(cat "$tmp")"
+            rm -f "$tmp"
+            if [ -d "$dir" ]; then
+                if [ "$dir" != "$(pwd)" ]; then
+                    cd "$dir"
+                fi
             fi
         fi
+    }
+
+    lf() {
+        [[ $LF_LEVEL && (-z "$TMUX" || "$LF_LEVEL" > 1) ]] && exit || lfcd "$@"
+    }
+fi
+
+declare -r feh_path=$(command -v feh)
+if [[ "$feh_path" ]]; then
+    feh() {
+        "$feh_path" -FdB black $@
+    }
+    zle -N feh
+fi
+
+if $(command -v nvim > /dev/null); then
+    alias vi='nvim'
+    if [ -f $XDG_CONFIG_HOME/nvim/lightinit.vim ]; then 
+        alias nviml="nvim -u $XDG_CONFIG_HOME/nvim/lightinit.vim"
+        alias vil=nviml
     fi
-}
+fi
 
-lf() {
-    [[ $LF_LEVEL && (-z "$TMUX" || "$LF_LEVEL" > 1) ]] && exit || lfcd "$@"
-}
-#zle -N lf
-
-#alias lf='lfcd'
-alias topmem='ps axch ocmd:15,%mem | sort -uk 1.1,1.15 | sort -rk 1.16 | head'
-alias topcpu='ps axch ocmd:15,%cpu | sort -uk 1.1,1.15 | sort -rk 1.16 | head'
-alias expacsize="expac -S -H M '%kt %n'"
-alias expacdate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail"
-alias dmenu="dmenu -nb #000000"
-alias firefoxp="firefox --private-window"
-alias clipimage='xclip -selection clipboard -t image/jpeg -o >'
+#function chpwd() { 
+#    emulate -L zsh
+#    ls -a
+#}

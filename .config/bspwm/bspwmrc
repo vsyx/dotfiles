@@ -15,8 +15,22 @@ bspc config single_monocle true
 
 bspc rule -a Emacs state=tiled
 
-$XDG_CONFIG_HOME/polybar/launch.sh
+$XDG_CONFIG_HOME/polybar/launch.sh &
 
-#if [ -f $XDG_CONFIG_HOME/keybindings.sh ]; then
-#    $XDG_CONFIG_HOME/keybindings.sh &
-#fi
+setup() {
+    until [ ! -s "/tmp/bspwm_$DISPLAY_0" ]; do # wait for socket
+        sleep 1
+    done
+
+    bspc subscribe node_add node_remove node_focus desktop_focus | while read -r line
+    do
+        polybar-msg hook window-list 1
+    done
+
+    #bspc subscribe node_focus node_remove desktop_focus node_add | while read -r line
+    #do
+        #polybar-msg hook window-title 1
+    #done
+}
+
+setup &

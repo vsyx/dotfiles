@@ -107,6 +107,6 @@ export LS_COLORS='di=1;35:fi=0:ln=90:ex=92:tw=0:ow=0'
 
 # Syntax highlight has to be at the end
 source $XDG_CONFIG_HOME/fzf/fzf.zsh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
