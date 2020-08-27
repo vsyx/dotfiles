@@ -2,13 +2,6 @@ set nocompatible
 filetype plugin indent on
 syntax enable 
 
-hi airline_term guibg=black guifg=black
-hi airline_term_bold guibg=black guifg=black
-hi airline_term_inactive guibg=black guifg=black
-hi airline_term_inactive_bold guibg=black guifg=black
-hi airline_term_inactive_red guibg=black guifg=black
-
-
 "Toggles for various utils
 let g:coc_start_at_startup = 1
 let g:rainbow_active = 1
@@ -18,11 +11,11 @@ let g:colorizer_auto_filetype = 'css,html'
 let g:AutoPairsShortcutToggle = ''
 let g:AutoPairsFlyMode = 0
 
-let s:PLUG_VIM = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
+let s:plug_vim = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
 
-if empty(s:PLUG_VIM)
-	  silent execute '!curl -fLo' . s:PLUG_VIM . '--create-dirs' \
-	  . 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+if !filereadable(s:plug_vim)
+	  silent execute '!curl -fLo ' . s:plug_vim . ' --create-dirs ' 
+          \ . 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 	  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 	endif
 call plug#begin()
@@ -30,7 +23,7 @@ call plug#begin()
 
 	Plug 'jiangmiao/auto-pairs'	
 	Plug 'scrooloose/nerdcommenter'
-    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf', { 'do': './install --xdg --all --no-update-rc --no-fish --no-bash' }
     Plug 'junegunn/fzf.vim'
 	Plug 'bling/vim-airline' 
 	Plug 'lambdalisue/fern.vim'
@@ -267,53 +260,55 @@ endfunction
 "endfunction
 
 "Coc
-inoremap <silent><expr> <TAB>
-    \ coc#expandableOrJumpable() && !pumvisible() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-    \ pumvisible() ? coc#_select_confirm() : "\<TAB>"
-"inoremap <expr> <cr> complete_info(['selected'])["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+if get(g:, 'coc_enabled', v:false)
+    inoremap <silent><expr> <TAB>
+        \ coc#expandableOrJumpable() && !pumvisible() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+        \ pumvisible() ? coc#_select_confirm() : "\<TAB>"
+    "inoremap <expr> <cr> complete_info(['selected'])["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-"function! s:check_back_space() abort
-"  let col = col('.') - 1
-"  return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
+    "function! s:check_back_space() abort
+    "  let col = col('.') - 1
+    "  return !col || getline('.')[col - 1]  =~# '\s'
+    "endfunction
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> <leader>d <Plug>(coc-definition)
-nmap <silent> <leader>y <Plug>(coc-type-definition)
-nmap <silent> <leader>i <Plug>(coc-implementation)
-nmap <silent> <leader>r <Plug>(coc-references)
-nmap <silent> <leader>n <Plug>(coc-rename) 
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-inoremap <silent><expr> <c-space> coc#refresh()
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>x  <Plug>(coc-codeaction)
-nmap <leader>q  <Plug>(coc-fix-current)
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+    " Use `[g` and `]g` to navigate diagnostics
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
+    nmap <silent> <leader>d <Plug>(coc-definition)
+    nmap <silent> <leader>y <Plug>(coc-type-definition)
+    nmap <silent> <leader>i <Plug>(coc-implementation)
+    nmap <silent> <leader>r <Plug>(coc-references)
+    nmap <silent> <leader>n <Plug>(coc-rename) 
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
+    inoremap <silent><expr> <c-space> coc#refresh()
+    xmap <leader>f  <Plug>(coc-format-selected)
+    nmap <leader>f  <Plug>(coc-format-selected)
+    xmap <leader>a  <Plug>(coc-codeaction-selected)
+    nmap <leader>x  <Plug>(coc-codeaction)
+    nmap <leader>q  <Plug>(coc-fix-current)
+    xmap if <Plug>(coc-funcobj-i)
+    xmap af <Plug>(coc-funcobj-a)
+    omap if <Plug>(coc-funcobj-i)
+    omap af <Plug>(coc-funcobj-a)
+    nmap <silent> <TAB> <Plug>(coc-range-select)
+    xmap <silent> <TAB> <Plug>(coc-range-select)
+    "set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-nnoremap <leader>a :CocAction <CR>
-let g:coc_snippet_next = '<tab>'
-let g:coc_snippet_prev = '<s-tab>'
+    nnoremap <leader>a :CocAction <CR>
+    let g:coc_snippet_next = '<tab>'
+    let g:coc_snippet_prev = '<s-tab>'
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight') 
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight') 
+endif
 "echo synIDattr(synID(line("."), col("."), 1), NAME_FG_BG)
 
 "smart indent when entering insert mode with i on empty lines
