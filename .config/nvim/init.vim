@@ -1,3 +1,4 @@
+set rtp+=~/.local/share/nvim/runtime
 set nocompatible
 filetype plugin indent on
 syntax enable 
@@ -12,7 +13,6 @@ let g:AutoPairsShortcutToggle = ''
 let g:AutoPairsFlyMode = 0
 
 let s:plug_vim = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
-
 if !filereadable(s:plug_vim)
 	  silent execute '!curl -fLo ' . s:plug_vim . ' --create-dirs ' 
           \ . 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -23,7 +23,7 @@ call plug#begin()
 
 	Plug 'jiangmiao/auto-pairs'	
 	Plug 'scrooloose/nerdcommenter'
-    Plug 'junegunn/fzf', { 'do': './install --xdg --all --no-update-rc --no-fish --no-bash' }
+    Plug 'junegunn/fzf' " Just  get the default shell bindings
     Plug 'junegunn/fzf.vim'
 	Plug 'bling/vim-airline' 
 	Plug 'lambdalisue/fern.vim'
@@ -42,15 +42,14 @@ call plug#begin()
 
 	Plug 'junegunn/vim-slash'
 	Plug 'machakann/vim-highlightedyank'
-	Plug 'mbbill/undotree'
 	Plug 'michaeljsmith/vim-indent-object' 
-	Plug 'voldikss/vim-floaterm'
 	
 	"Git
 	"Plug 'tpope/vim-fugitive'
 	"Plug 'mhinz/vim-signify'
 	"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 
+	"Plug 'mbbill/undotree'
 	"Plug 'morhetz/gruvbox'
 	"Plug 'justinmk/vim-sneak'
 	"Plug 'hsanson/vim-android'
@@ -88,12 +87,6 @@ map <SPACE> <leader>
 nnoremap <leader><space> <Nop>
 nnoremap gs gT
 nnoremap <silent> <leader>q :q <CR>
-nnoremap <silent> <leader>h :leftabove new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>l :vsp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent><C-s> :call ProjectFiles()<CR>
 nnoremap <silent><M-s> :call fzf#run(fzf#wrap({'source': 'fd -H -t f . ~', 
             \'options': '--reverse --delimiter / --with-nth 4..'}))<CR>
@@ -106,6 +99,13 @@ if has('nvim') && !exists('g:fzf_layout')
     \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 endif
 
+if has ('nvim')
+    set fillchars=eob:\ 
+    set pumblend=15
+    set winblend=15
+    hi PmenuSel blend=0
+endif
+
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
@@ -115,10 +115,7 @@ set copyindent      " copy indent from the previous line
 set mps+=<:>
 set scrolloff=5
 set nojoinspaces "J 1 space instead of 2
-set fillchars=eob:\ 
 set numberwidth=1
-set pumblend=15
-set winblend=15
 set mouse=a " tmux scrolling
 set number
 set rnu
@@ -134,14 +131,12 @@ set cmdheight=1
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
-hi PmenuSel blend=0
 
 "Looks
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme="badcat"
 let g:airline_powerline_fonts = 1
 colorscheme hashpunk-sweet
-highlight Normal guibg=none
 
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -170,6 +165,13 @@ let g:loaded_netrwSettings     = 1
 let g:loaded_netrwFileHandlers = 1
 
 " Fern
+nnoremap <silent> <leader>h :leftabove new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>l :vsp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
+nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
+
 function! s:smart_path() abort
   if !empty(&buftype) || bufname('%') =~# '^[^:]\+://'
     return fnamemodify('.', ':p')
@@ -208,7 +210,6 @@ function! s:hijack_directory() abort
   endif
   exec 'Fern '. expand('%')
 endfunction
-
 
 " Git search
 function! s:get_git_root()
@@ -260,7 +261,7 @@ endfunction
 "endfunction
 
 "Coc
-if get(g:, 'coc_enabled', v:false)
+if get(g:, 'coc_enabled', v:true)
     inoremap <silent><expr> <TAB>
         \ coc#expandableOrJumpable() && !pumvisible() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
         \ pumvisible() ? coc#_select_confirm() : "\<TAB>"

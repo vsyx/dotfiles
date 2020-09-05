@@ -7,7 +7,7 @@
 " COLOR PALETTE -------------------------------------------------------------{{{
 let g:airline#themes#badcat#palette = {}
 
-let s:guiBlack       = "none"
+let s:guiBlack       = "NONE"
 let s:guiGray        = "#262626"
 let s:guiLightgray   = "#6c6c6c"
 let s:guiWhite       = "#e4e4e4"

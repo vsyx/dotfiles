@@ -1,8 +1,10 @@
 zmodload zsh/complist
+fpath=(
+  /usr/local/share/zsh/site-functions
+  $fpath
+)
 
-if [ -f $XDG_CONFIG_HOME/aliases ]; then
-    source $XDG_CONFIG_HOME/aliases
-fi
+[ -f $XDG_CONFIG_HOME/aliases ]&&  source $XDG_CONFIG_HOME/aliases
 
 HISTSIZE=1000
 SAVEHIST=1000
@@ -44,14 +46,15 @@ bindkey "^?" backward-delete-char
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 setopt PROMPT_SUBST
-git_branch() {
+git_branch_prompt() {
     echo "%F{197}$(git symbolic-ref --short HEAD 2> /dev/null)%f"
 }
 
-PROMPT='%F{161}%5c%f $(git_branch) '
+docker_prompt() {
+    [ ! -f  /.dockerenv ] && echo "" || echo "%F{44}🐋%f"
+}
 
-#Autojump
-[[ -s /home/tixxy/.autojump/etc/profile.d/autojump.sh ]] && source /home/tixxy/.autojump/etc/profile.d/autojump.sh
+PROMPT='$(docker_prompt) %F{161}%5c%f $(git_branch_prompt) '
 
 stty -ixon # unbind C-S
 stty -ixoff # unbind C-Q
@@ -105,8 +108,10 @@ x11-clip-wrap-widgets paste  $paste_widgets
 
 export LS_COLORS='di=1;35:fi=0:ln=90:ex=92:tw=0:ow=0'
 
+#Autojump
+[[ -s /home/$HOME/.autojump/etc/profile.d/autojump.sh ]] && source /home/$HOME/.autojump/etc/profile.d/autojump.sh
+
 # Syntax highlight has to be at the end
 source $XDG_CONFIG_HOME/fzf/fzf.zsh
 
 [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

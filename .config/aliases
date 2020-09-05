@@ -60,7 +60,7 @@ if command -v lf > /dev/null; then
     }
 fi
 
-declare -r feh_path=$(command -v feh)
+declare feh_path=$(command -v feh)
 if [[ "$feh_path" ]]; then
     feh() {
         "$feh_path" -FdB black $@

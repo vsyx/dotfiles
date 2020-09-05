@@ -8,7 +8,7 @@ let g:colors_name = 'hashpunk-sweet'
 set background=dark
 
 " Dark Meadow Legacy
-let s:clear           =  ['NONE', 'NONE'   ]
+let s:clear           =  ['NONE', 'NONE']
 let s:DarkMagenta     =  ['90'  , '#870087']
 let s:Purple4         =  ['55'  , '#5f00af']
 let s:SkyBlue1        =  ['117' , '#87afff']
@@ -109,12 +109,15 @@ call s:highlight('MatchParen', s:Grey0, s:MediumOrchid1, s:none)
 call s:highlight('ColorColumn', s:MainColor, s:Grey15, s:none)
 
 " Interface highlighting
-call s:highlight('Normal', s:Grey93, s:Grey0, s:none)
+call s:highlight('Normal', s:Grey93, s:clear, s:none)
 call s:highlight('Visual', s:clear, s:Grey15, s:none)
 call s:highlight('Cursor', s:clear, s:Grey0, s:none)
 call s:highlight('iCursor', s:clear, s:Grey0, s:none)
 call s:highlight('LineNr', s:Grey66, s:clear, s:none)
 call s:highlight('NonText', s:Grey66, s:clear, s:none)
+if !has('nvim')
+    call s:highlight('EndOfBuffer', s:Grey0, s:clear, s:none)
+endif
 call s:highlight('CursorLineNr', s:MainColor, s:clear, s:none)
 call s:highlight('VertSplit', s:Grey15, s:clear, s:none)
 

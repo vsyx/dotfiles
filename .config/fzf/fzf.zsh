@@ -1,21 +1,17 @@
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # Fuzzy completion
-[[ $- == *i* ]] && source "$HOME/.config/nvim/plugged/fzf/shell/completion.zsh" 2> /dev/null
+[[ $- == *i* ]] && source "$XDG_CONFIG_HOME/nvim/plugged/fzf/shell/completion.zsh" 2> /dev/null
 
 # Key bindings
 # ------------
-[ -f $HOME/.config/nvim/plugged/fzf/shell/key-bindings.zsh ] && source "$HOME/.config/nvim/plugged/fzf/shell/key-bindings.zsh"
+[ -f "$XDG_CONFIG_HOME/nvim/plugged/fzf/shell/key-bindings.zsh" ] && source "$XDG_CONFIG_HOME/nvim/plugged/fzf/shell/key-bindings.zsh"
 
 bindkey -r '^T' # remove default ctrl-t
 
-declare IGNORE_FILE=$XDG_CONFIG_HOME/fzf/ignore.txt
-declare FZF_COLORS=$FZF_DEFAULT_OPTS' --color=fg:#d0d0d0,bg:-1,hl:#d7005f --color=fg+:#d0d0d0,bg+:-1,hl+:#5fd7ff --color=info:#afaf87,prompt:#d7005f,pointer:#d7008f --color=marker:#87ff00,spinner:#af5fff,header:#87afaf'
+IGNORE_FILE=$XDG_CONFIG_HOME/fzf/ignore.txt
+FZF_COLORS=$FZF_DEFAULT_OPTS' --color=fg:#d0d0d0,bg:-1,hl:#d7005f --color=fg+:#d0d0d0,bg+:-1,hl+:#5fd7ff --color=info:#afaf87,prompt:#d7005f,pointer:#d7008f --color=marker:#87ff00,spinner:#af5fff,header:#87afaf'
 
 export FZF_DEFAULT_COMMAND="fd -H -t f . --ignore-file $IGNORE_FILE"
 export FZF_DEFAULT_OPTS="$FZF_COLORS --height 50% --reverse" 
-
-#export FZF_CTRL_T_COMMAND="fd -H -t f --ignore-file $IGNORE_FILE . ~"
 
 ctrl_t_fzf() {
     local files="$(fd -H -t f --ignore-file $IGNORE_FILE . ~ | fzf -m --reverse --delimiter / --with-nth 4.. | tr '\n' ' ')"

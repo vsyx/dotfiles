@@ -9,6 +9,7 @@ export LESSHISTFILE="$XDG_CONFIG_HOME/.lesshst"
 export NODE_REPL_HISTORY=''
 export PYLINTHOME=$HOME/.cache/pylint
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export MANPATH=":$HOME/.local/share/man"
 
 path=("$HOME/.local/bin" $path)
 export PATH
