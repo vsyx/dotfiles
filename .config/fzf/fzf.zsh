@@ -13,7 +13,7 @@ FZF_COLORS=$FZF_DEFAULT_OPTS' --color=fg:#d0d0d0,bg:-1,hl:#d7005f --color=fg+:#d
 export FZF_DEFAULT_COMMAND="fd -H -t f . --ignore-file $IGNORE_FILE"
 export FZF_DEFAULT_OPTS="$FZF_COLORS --height 50% --reverse" 
 
-ctrl_t_fzf() {
+ctrl_s_fzf() {
     local files="$(fd -H -t f --ignore-file $IGNORE_FILE . ~ | fzf -m --reverse --delimiter / --with-nth 4.. | tr '\n' ' ')"
     if [[ -z "${LBUFFER// }" && ! -z "$files" ]]; then
         $EDITOR $(echo "$files" | tr '\n' ' ') -O
@@ -23,8 +23,8 @@ ctrl_t_fzf() {
     fi
     zle reset-prompt
 }
-zle -N ctrl_t_fzf
-bindkey '^S' ctrl_t_fzf
+zle -N ctrl_s_fzf
+bindkey '^S' ctrl_s_fzf
 
 cdfzf() {
     local dir=$(fd -H -t d --ignore-file $IGNORE_FILE . ~ | fzf --reverse --delimiter / --with-nth 4.. +m)
@@ -37,6 +37,24 @@ cdfzf() {
 
 zle -N cdfzf
 bindkey '^Q' cdfzf
+
+git_fzf() {
+    local basedir=$(git rev-parse --show-toplevel 2>/dev/null) 
+    [ ! $basedir ] && return 1
+
+    local files="$(cd $basedir && git ls-files -cmo --exclude-standard | fzf -m --reverse | tr '\n' ' ')"
+    if [[ -z "${LBUFFER// }" && ! -z "$files" ]]; then
+        $EDITOR $(echo "$files" | tr '\n' ' ') -O
+        preexec
+    else
+        LBUFFER="$LBUFFER$files"
+    fi
+    zle reset-prompt
+}
+
+zle -N git_fzf
+bindkey '^G' git_fzf
+
 
 # vimfzf() {
     #local files=$(fd -H -t f --ignore-file $IGNORE_FILE . . | fzf -m)

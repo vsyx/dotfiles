@@ -47,7 +47,7 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 setopt PROMPT_SUBST
 git_branch_prompt() {
-    echo "%F{197}$(git symbolic-ref --short HEAD 2> /dev/null)%f"
+    echo "%F{190}$(git symbolic-ref --short HEAD 2> /dev/null)%f"
 }
 
 docker_prompt() {
