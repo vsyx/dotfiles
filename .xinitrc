@@ -33,14 +33,16 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 export _JAVA_AWT_WM_NONREPARENTING=1
-xrandr --setprovideroutputsource modesetting NVIDIA-0
+#xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
     
 feh --bg-scale ~/Downloads/black.jpg --no-fehbg
 xsetroot -cursor_name left_ptr
 
+setxkbmap -option caps:escape -option terminate:ctrl_alt_bksp
 picom &
 sxhkd -c $XDG_CONFIG_HOME/sxhkd/sxhkdrc2 &
+/usr/bin/prime-offload
 exec bspwm
 
 #setbar &

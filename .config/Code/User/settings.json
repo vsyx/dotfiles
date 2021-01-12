@@ -6,9 +6,10 @@
         "editor.suggestSelection": "first",
         "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
         "C_Cpp.updateChannel": "Insiders",
-        "workbench.colorTheme": "Pitch Black",
+        "workbench.colorTheme": "Visual Studio 2019 Dark",
         "window.titleBarStyle": "custom",
         "workbench.colorCustomizations": {
             "titleBar.activeBackground": "#000000" // Change this color!
-          }
+        },
+        "editor.lineNumbers": "relative"
     }

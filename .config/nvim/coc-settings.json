@@ -43,6 +43,9 @@
         "contentProvider.preferred": "fernflower",
         "errors.incompleteClasspath.severity": "ignore"
     },
+    "python": {
+        "jediPath": "/home/tixxy/.local/lib/python3.8/site-packages"
+    },
     "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
     "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true
 }

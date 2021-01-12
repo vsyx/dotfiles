@@ -11,6 +11,8 @@ let g:load_doxygen_syntax = 1
 let g:colorizer_auto_filetype = 'css,html'
 let g:AutoPairsShortcutToggle = ''
 let g:AutoPairsFlyMode = 0
+let g:plist_display_format = 'xml'
+let g:python_highlight_space_errors = 0
 
 let s:plug_vim = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
 if !filereadable(s:plug_vim)
@@ -20,6 +22,8 @@ if !filereadable(s:plug_vim)
 	endif
 call plug#begin()
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	Plug 'dhruvasagar/vim-zoom'
+	Plug 'morhetz/gruvbox'
 
 	Plug 'jiangmiao/auto-pairs'	
 	Plug 'scrooloose/nerdcommenter'
@@ -38,6 +42,7 @@ call plug#begin()
 	Plug 'sheerun/vim-polyglot'
 	Plug 'arecarn/vim-crunch' " calculator g==
 	Plug 'junegunn/vim-after-object'
+	Plug 'OrangeT/vim-csharp'
 	autocmd VimEnter * silent! call after_object#enable('=', ':', '#', ' ', '|')
 
 	Plug 'junegunn/vim-slash'
@@ -68,24 +73,35 @@ call plug#end()
 let g:coc_global_extensions = [
             \'coc-snippets',
             \'coc-tsserver',
+            \'coc-eslint',
             \'coc-python',
             \'coc-java',
-            \'https://github.com/xabikos/vscode-javascript',
-            \'https://github.com/dgileadi/vscode-java-decompiler'
+            \'coc-omnisharp',
+            \'https://github.com/xabikos/vscode-javascript'
             \]
 
 "Mappings
-"let mapleader=" "
+map <SPACE> <leader>
+nnoremap <leader><space> <Nop>
+
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-nnoremap <M-y> "+y
-vnoremap <M-y> "+y
-map <SPACE> <leader>
-nnoremap <leader><space> <Nop>
+"Yanking
+if has('unnamedplus') | set clipboard+=unnamedplus | endif
+"nnoremap <M-y> "+y
+"vnoremap <M-y> "+y
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+"When deleting save in d register
+"nnoremap d "dd
+"vnoremap d "dd
+
+"Easier prev tab
 nnoremap gs gT
+
 nnoremap <silent> <leader>q :q <CR>
 nnoremap <silent><C-s> :call ProjectFiles()<CR>
 nnoremap <silent><M-s> :call fzf#run(fzf#wrap({'source': 'fd -H -t f . ~', 
@@ -120,6 +136,7 @@ set mouse=a " tmux scrolling
 set number
 set rnu
 set formatoptions+=t
+set formatoptions-=cro
 set noshowmatch
 set ignorecase
 set splitbelow
@@ -136,7 +153,7 @@ set signcolumn=yes
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme="badcat"
 let g:airline_powerline_fonts = 1
-colorscheme hashpunk-sweet
+colorscheme hashpunk-v2
 
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -310,6 +327,13 @@ if get(g:, 'coc_enabled', v:true)
     " Highlight the symbol and its references when holding the cursor.
     autocmd CursorHold * silent call CocActionAsync('highlight') 
 endif
+
+let g:rainbow_conf = {
+            \    'separately': {
+            \        'typescript': 0
+            \    }
+            \}
+
 "echo synIDattr(synID(line("."), col("."), 1), NAME_FG_BG)
 
 "smart indent when entering insert mode with i on empty lines

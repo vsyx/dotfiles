@@ -8,3 +8,4 @@
 .local/lib
 node_modules/
 .git/
+Sync/

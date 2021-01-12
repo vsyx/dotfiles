@@ -60,14 +60,6 @@ if command -v lf > /dev/null; then
     }
 fi
 
-declare feh_path=$(command -v feh)
-if [[ "$feh_path" ]]; then
-    feh() {
-        "$feh_path" -FdB black $@
-    }
-    zle -N feh
-fi
-
 if $(command -v nvim > /dev/null); then
     alias vi='nvim'
     if [ -f $XDG_CONFIG_HOME/nvim/lightinit.vim ]; then 

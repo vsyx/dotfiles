@@ -11,6 +11,8 @@ let g:colorizer_auto_filetype = 'css,html'
 let g:AutoPairsShortcutToggle = ''
 let g:AutoPairsFlyMode = 0
 
+let python_highlight_space_errors = 0
+
 let s:plug_vim = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
 if !filereadable(s:plug_vim)
 	  silent execute '!curl -fLo ' . s:plug_vim . ' --create-dirs ' 
@@ -40,23 +42,35 @@ call plug#begin()
 call plug#end()
 
 "Mappings
-"let mapleader=" "
+map <SPACE> <leader>
+nnoremap <leader><space> <Nop>
+
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+"Yanking
+if has('unnamedplus') | set clipboard+=unnamedplus | endif
 nnoremap <M-y> "+y
 vnoremap <M-y> "+y
-map <SPACE> <leader>
-nnoremap <leader><space> <Nop>
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+"Easier prev tab
 nnoremap gs gT
+
 nnoremap <silent> <leader>q :q <CR>
 nnoremap <silent><C-s> :call ProjectFiles()<CR>
 nnoremap <silent><M-s> :call fzf#run(fzf#wrap({'source': 'fd -H -t f . ~', 
             \'options': '--reverse --delimiter / --with-nth 4..'}))<CR>
 nnoremap <m-b> :Buffers<CR>
 tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
+
+if has('nvim') && !exists('g:fzf_layout')
+  autocmd! FileType fzf
+  autocmd  FileType fzf set laststatus=0 noshowmode noruler
+    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+endif
 
 if has ('nvim')
     set fillchars=eob:\ 
@@ -95,7 +109,7 @@ set signcolumn=yes
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme="badcat"
 let g:airline_powerline_fonts = 1
-colorscheme hashpunk-sweet
+colorscheme hashpunk-v2
 
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -130,6 +144,7 @@ nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
 nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
+
 function! s:smart_path() abort
   if !empty(&buftype) || bufname('%') =~# '^[^:]\+://'
     return fnamemodify('.', ':p')
@@ -175,10 +190,34 @@ function! s:get_git_root()
     return v:shell_error == 0 ? l:res : 0
 endfunction
 
+function! s:get_coc_root()
+    for workspace in g:WorkspaceFolders
+        if stridx(expand('%:p'), workspace) != '-1'
+            return workspace
+        endif
+    endfor
+endfunction
+
+function! Get_project_root()
+    let l:sources = [function('s:get_git_root'), function('s:get_coc_root')]
+    for Source in l:sources
+        let l:dict = call(Source, [])
+        if !empty(l:dict) 
+            return l:dict
+        endif
+    endfor
+endfunction
+
 function! ProjectFiles()
     let l:gitRoot = s:get_git_root()
     if !empty(l:gitRoot) 
         execute "GFiles -co --exclude-standard"
+        return 1
+    endif
+
+    let l:cocRoot = s:get_coc_root()
+    if !empty(l:cocRoot) 
+        execute "FZF " . l:cocRoot
         return 1
     endif
 endfunction

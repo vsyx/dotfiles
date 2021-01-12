@@ -103,6 +103,13 @@ zle -N run-again
 bindkey '^P' run-again 
 bindkey -M vicmd '^P' run-again 
 
+bindkey '^j' down-history
+bindkey -M vicmd '^j' down-history
+
+bindkey '^k' up-history
+bindkey -M vicmd '^k' up-history
+
+
 x11-clip-wrap-widgets copy $copy_widgets
 x11-clip-wrap-widgets paste  $paste_widgets
 

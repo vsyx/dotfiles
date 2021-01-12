@@ -200,20 +200,22 @@ call s:highlight('goImport', s:Purple4, s:clear, s:italic)
 " Requires plug: rust-lang/rust.vim
 "
 call s:highlight('rustMacro', s:MediumOrchid1, s:clear, s:none)
+call s:highlight('typescriptMember', s:Grey93, s:clear, s:none)
 
-let g:terminal_color_0 = '#263640'
-let g:terminal_color_1 = '#d12f2c'
-let g:terminal_color_2 = '#819400'
-let g:terminal_color_3 = '#b08500'
-let g:terminal_color_4 = '#2587cc'
-let g:terminal_color_5 = '#d7005f'
-let g:terminal_color_6 = '#289c93'
-let g:terminal_color_7 = '#a0a0a0'
-let g:terminal_color_8 = '#4a697d'
-let g:terminal_color_9 = '#fa3935'
-let g:terminal_color_10 = '#a4bd00'
-let g:terminal_color_11 = '#d9a400'
-let g:terminal_color_12 = '#2ca2f5'
-let g:terminal_color_13 = '#d7005f'
-let g:terminal_color_14 = '#33c5ba'
-let g:terminal_color_15 = '#ffffff'
+
+"let g:terminal_color_0 = '#263640'
+"let g:terminal_color_1 = '#d12f2c'
+"let g:terminal_color_2 = '#819400'
+"let g:terminal_color_3 = '#b08500'
+"let g:terminal_color_4 = '#2587cc'
+"let g:terminal_color_5 = '#d7005f'
+"let g:terminal_color_6 = '#289c93'
+"let g:terminal_color_7 = '#a0a0a0'
+"let g:terminal_color_8 = '#4a697d'
+"let g:terminal_color_9 = '#fa3935'
+"let g:terminal_color_10 = '#a4bd00'
+"let g:terminal_color_11 = '#d9a400'
+"let g:terminal_color_12 = '#2ca2f5'
+"let g:terminal_color_13 = '#d7005f'
+"let g:terminal_color_14 = '#33c5ba'
+"let g:terminal_color_15 = '#ffffff'

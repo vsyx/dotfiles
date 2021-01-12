@@ -47,4 +47,4 @@ XF86MonBrightness{Down,Up}
     xbacklight -{dec,inc} 5
 
 Print
-    maim -s | xclip -selection clipboard -t image/png
+    maim -us | xclip -selection clipboard -t image/png
