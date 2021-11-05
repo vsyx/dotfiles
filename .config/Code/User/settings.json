@@ -11,5 +11,6 @@
         "workbench.colorCustomizations": {
             "titleBar.activeBackground": "#000000" // Change this color!
         },
-        "editor.lineNumbers": "relative"
+        "editor.lineNumbers": "relative",
+        "extensions.ignoreRecommendations": true
     }

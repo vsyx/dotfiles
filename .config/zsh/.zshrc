@@ -3,6 +3,7 @@ fpath=(
   /usr/local/share/zsh/site-functions
   $fpath
 )
+plugins=(virtualenv)
 
 [ -f $XDG_CONFIG_HOME/aliases ]&&  source $XDG_CONFIG_HOME/aliases
 
@@ -45,16 +46,28 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 bindkey "^?" backward-delete-char
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 
-setopt PROMPT_SUBST
+# Prompt
+setopt prompt_subst
 git_branch_prompt() {
     echo "%F{190}$(git symbolic-ref --short HEAD 2> /dev/null)%f"
 }
-
-docker_prompt() {
-    [ ! -f  /.dockerenv ] && echo "" || echo "%F{44}🐋%f"
+function virtualenv_info { 
+    [ $VIRTUAL_ENV ] && echo "%F{51}$(basename $VIRTUAL_ENV)%f " 
 }
 
-PROMPT='$(docker_prompt) %F{161}%5c%f $(git_branch_prompt) '
+prompt() {
+    PROMPT="%F{161}%5c%f $(git_branch_prompt) $(virtualenv_info)"
+}
+precmd_functions+=(prompt)
+
+#prompt_personal_setup() {
+    #PROMPT="%F{161}%5c%f $(git_branch_prompt) "
+#}
+
+#export PROMPT="%F{161}%5c%f $(git_branch_prompt) "
+#prompt_themes+=(personal)
+#prompt personal
+
 
 stty -ixon # unbind C-S
 stty -ixoff # unbind C-Q
@@ -109,7 +122,6 @@ bindkey -M vicmd '^j' down-history
 bindkey '^k' up-history
 bindkey -M vicmd '^k' up-history
 
-
 x11-clip-wrap-widgets copy $copy_widgets
 x11-clip-wrap-widgets paste  $paste_widgets
 
@@ -120,5 +132,8 @@ export LS_COLORS='di=1;35:fi=0:ln=90:ex=92:tw=0:ow=0'
 
 # Syntax highlight has to be at the end
 source $XDG_CONFIG_HOME/fzf/fzf.zsh
+
+# pyenv
+eval "$(pyenv init -)"
 
 [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

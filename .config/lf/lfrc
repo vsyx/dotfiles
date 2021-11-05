@@ -9,6 +9,7 @@ cmd tedit ${{
 map o &$OPENER $f
 map e tedit
 map w quit
+map <enter> &xdg-open "$f"
 
 cmd open 
 set number

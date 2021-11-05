@@ -11,6 +11,10 @@ export PYLINTHOME=$HOME/.cache/pylint
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export MANPATH=":$HOME/.local/share/man"
 
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+
 path=("$HOME/.local/bin" $path)
 export PATH
 

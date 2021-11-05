@@ -61,12 +61,14 @@ if command -v lf > /dev/null; then
 fi
 
 if $(command -v nvim > /dev/null); then
-    alias vi='nvim'
+    alias v='nvim'
     if [ -f $XDG_CONFIG_HOME/nvim/lightinit.vim ]; then 
         alias nviml="nvim -u $XDG_CONFIG_HOME/nvim/lightinit.vim"
         alias vil=nviml
     fi
 fi
+
+command -v exa > /dev/null && alias ls='exa'
 
 #function chpwd() { 
 #    emulate -L zsh

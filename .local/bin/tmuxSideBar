@@ -2,7 +2,7 @@
 
 SIDEBAR_WINDOW="${TMUX_SIDEBAR_WINDOW-:999}"
 PANE_TITLE="__SIDEBAR"
-SPLIT_OPTIONS="-hl 50"
+SPLIT_OPTIONS="-vl 10"
 
 window_panes="$(tmux list-panes -F "#T #D")"
 pane="$(echo "$window_panes" | grep "$PANE_TITLE" | cut -d ' ' -f2)"

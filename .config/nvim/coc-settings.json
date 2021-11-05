@@ -27,25 +27,11 @@
         "detailMaxLength": 50,
         "maxPreviewWidth": 200
     },
-    "java": {
-        "jdt.ls.vmargs": "-javaagent:/home/tixxy/Downloads/lombok.jar",
-        "home": "/usr/lib/jvm/default",
-        "format": {
-            "enable": true,
-            "onType.enabled": true,
-            "comments.enabled": false,
-            "settings": {
-                "url": "/home/tixxy/.config/nvim/format/java.xml",
-                "profile": "GoogleStyle"
-            }
-        },
-        "completion.overwrite": false,
-        "contentProvider.preferred": "fernflower",
-        "errors.incompleteClasspath.severity": "ignore"
-    },
-    "python": {
-        "jediPath": "/home/tixxy/.local/lib/python3.8/site-packages"
-    },
     "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+    "go.goplsOptions": {
+        "allowModfileModifications": true,
+    },
+    "omnisharp.version": "v1.37.5",
+    "rust-analyzer.inlayHints.enable": false
 }
