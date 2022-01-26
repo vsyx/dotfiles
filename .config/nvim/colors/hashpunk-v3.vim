@@ -150,3 +150,7 @@ call s:highlight('CocHighlightText', s:White, s:DarkDeepPink1, s:bold)
 call s:highlight('BufferCurrent', s:White, s:clear, s:bold)
 call s:highlight('BufferCurrentSign', s:DeepPink1, s:clear, s:none)
 call s:highlight('BufferInactiveSign', s:Grey42, s:clear, s:none)
+
+"Status/ruler format
+call s:highlight('User0', s:clear, s:clear, s:bold)
+call s:highlight('User1', s:clear, s:DeepPink1, s:bold)

@@ -2,6 +2,10 @@ set nocompatible
 filetype plugin indent on
 syntax enable 
 
+if has('win32')
+    set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
+endif
+
 let s:plug_vim = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
 if !filereadable(s:plug_vim)
 	  silent execute '!curl -fLo ' . s:plug_vim . ' --create-dirs ' 
@@ -10,7 +14,6 @@ if !filereadable(s:plug_vim)
 	endif
 call plug#begin()
     Plug 'lambdalisue/fern.vim'
-    Plug 'jupyter-vim/jupyter-vim'
         " Disable netrw
         let g:loaded_netrw             = 1
         let g:loaded_netrwPlugin       = 1
@@ -53,10 +56,11 @@ call plug#begin()
         nmap <silent> <leader>gp <Plug>(grammarous-move-to-previous-error)
 
     Plug 'wellle/targets.vim'
-    "Plug 'camspiers/animate.vim'
     Plug 'camspiers/lens.vim'
     Plug 'evanleck/vim-svelte', {'branch': 'main'}
 
+    "Plug 'jupyter-vim/jupyter-vim'
+    "Plug 'camspiers/animate.vim'
     "Plug 'wellle/context.vim'
         "let g:context_nvim_no_redraw = 1
     "Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
@@ -75,7 +79,7 @@ call plug#begin()
                     \        'typescript': 0
                     \    }
                     \}
-    Plug 'junegunn/fzf' " Just  get the default shell bindings
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Default shell bindings
     Plug 'junegunn/fzf.vim'
         nnoremap <silent><C-s> :GFiles -co --exclude-standard <CR>
 
@@ -88,12 +92,11 @@ call plug#begin()
                 \'coc-snippets',
                 \'coc-tsserver',
                 \'coc-eslint',
-                \'coc-python',
-                \'coc-omnisharp',
-                \'coc-go',
                 \'coc-rust-analyzer',
-                \'coc-svelte'
+                \'coc-pyright', 
+                \'coc-clangd'
                 \]
+                "\'coc-svelte',
                 "\'coc-rls',
     if get(g:, 'coc_enabled', v:true)
         inoremap <silent><expr> <TAB>
@@ -142,22 +145,32 @@ call plug#end()
 "Colorscheme
 colorscheme hashpunk-v3
 
+function! s:cursor_move(direction) abort 
+    if winnr() != winnr(a:direction)
+        execute "wincmd " . a:direction
+    elseif a:direction ==# 'l'
+        call feedkeys("gt")
+    elseif a:direction ==# 'h'
+        call feedkeys("gT")
+    endif
+endfunction
+
 "Mappings
 map <SPACE> <leader>
 nnoremap <leader><space> <Nop>
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <silent> <C-J> :call <SID>cursor_move('j')<CR>
+nnoremap <silent> <C-K> :call <SID>cursor_move('k')<CR>
+nnoremap <silent> <C-L> :call <SID>cursor_move('l')<CR>
+nnoremap <silent> <C-H> :call <SID>cursor_move('h')<CR>
 nnoremap <M-l> gt
 nnoremap <M-h> gT
 
 "Term
 tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
-tnoremap <C-J> <c-\><c-n><C-W><C-J>
-tnoremap <C-K> <c-\><c-n><C-W><C-K>
-tnoremap <C-L> <c-\><c-n><C-W><C-L>
-tnoremap <C-H> <c-\><c-n><C-W><C-H>
+tnoremap <silent> <C-J> <c-\><c-n>:call <SID>cursor_move('j')<CR>
+tnoremap <silent> <C-K> <c-\><c-n>:call <SID>cursor_move('k')<CR>
+tnoremap <silent> <C-L> <c-\><c-n>:call <SID>cursor_move('l')<CR>
+tnoremap <silent> <C-H> <c-\><c-n>:call <SID>cursor_move('h')<CR>
 tnoremap <M-l> <c-\><c-n>gt
 tnoremap <M-h> <c-\><c-n>gT
 augroup term_au
@@ -227,3 +240,9 @@ augroup remember_folds
   autocmd BufWinLeave,BufLeave,BufWritePost,BufHidden,QuitPre ?* nested silent! mkview!
   autocmd BufWinEnter ?* silent! loadview
 augroup END
+
+func! Modified_color_prefix() abort
+    return &modified ? "%1*" : "%0*"
+endfunc
+
+set rulerformat=%70(%=%{%Modified_color_prefix()%}%F\ %([%{&ff}\|%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}%k\|%Y]%)\ %([%l,%v][%p%%]\ %)%)

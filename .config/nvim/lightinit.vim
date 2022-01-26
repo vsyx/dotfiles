@@ -3,6 +3,10 @@ set nocompatible
 filetype plugin indent on
 syntax enable 
 
+if has('win32')
+    set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
+endif
+
 let g:coc_start_at_startup = 0
 let g:rainbow_active = 1
 let g:indentLine_enabled = 0
@@ -10,7 +14,6 @@ let g:load_doxygen_syntax = 0
 let g:colorizer_auto_filetype = 'css,html'
 let g:AutoPairsShortcutToggle = ''
 let g:AutoPairsFlyMode = 0
-
 let python_highlight_space_errors = 0
 
 let s:plug_vim = glob(has('nvim') ? '$XDG_CONFIG_HOME/nvim' : '$HOME/.vim') . '/autoload/plug.vim'
@@ -21,63 +24,115 @@ if !filereadable(s:plug_vim)
 	endif
 call plug#begin()
 	"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	
+    Plug 'lambdalisue/fern.vim'
+        " Disable netrw
+        let g:loaded_netrw             = 1
+        let g:loaded_netrwPlugin       = 1
+        let g:loaded_netrwSettings     = 1
+        let g:loaded_netrwFileHandlers = 1
 
-	Plug 'jiangmiao/auto-pairs'	
-	Plug 'scrooloose/nerdcommenter'
-    Plug 'junegunn/fzf' " Just to get the default shell bindings
-	Plug 'junegunn/fzf.vim'
-	Plug 'bling/vim-airline' 
-	Plug 'lambdalisue/fern.vim'
+        nnoremap <silent> <leader>h :leftabove new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+        nnoremap <silent> <leader>l :vsp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+        nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+        nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
+        nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
+        nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
 
-	Plug 'dhruvasagar/vim-table-mode'
-	Plug 'luochen1990/rainbow'
-	Plug 'alvan/vim-closetag'
-	Plug 'tommcdo/vim-lion'
-	Plug 'sheerun/vim-polyglot'
-	Plug 'arecarn/vim-crunch'
-	Plug 'junegunn/vim-after-object'
+        function! s:smart_path() abort
+            if !empty(&buftype) || bufname('%') =~# '^[^:]\+://'
+                return fnamemodify('.', ':p')
+            endif
+            return fnamemodify(expand('%'), ':p:h')
+        endfunction
+
+        function! s:init_fern() abort
+            nunmap <buffer> <C-h>
+            nunmap <buffer> <C-j>
+            nunmap <buffer> <C-k>
+            nunmap <buffer> <C-l>
+            nmap <buffer><nowait> -         <Plug>(fern-action-leave)
+            nmap <buffer><nowait> <Return>  <Plug>(fern-action-open)
+            nmap <buffer><nowait> S         <Plug>(fern-action-mark-toggle)
+        endfunction
+
+        augroup fern-custom
+          autocmd! *
+          autocmd FileType fern call s:init_fern()
+        augroup END
+
+	Plug 'scrooloose/nerdcommenter' 
+	Plug 'sheerun/vim-polyglot' 
+	Plug 'rhysd/vim-grammarous'
+        nmap <silent> <leader>gn <Plug>(grammarous-move-to-next-error)
+        nmap <silent> <leader>gp <Plug>(grammarous-move-to-previous-error)
+    Plug 'wellle/targets.vim'
+    Plug 'camspiers/lens.vim'
 	Plug 'junegunn/vim-slash'
+    Plug 'junegunn/vim-after-object'
 	Plug 'machakann/vim-highlightedyank'
 	Plug 'michaeljsmith/vim-indent-object' 
+    Plug 'unblevable/quick-scope'
+        let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Default shell bindings
+    Plug 'junegunn/fzf.vim'
+        nnoremap <silent><C-s> :GFiles -co --exclude-standard <CR>
+
+    Plug 'antoinemadec/FixCursorHold.nvim'
+        let g:cursorhold_updatetime = 100
+
+	"Plug 'tommcdo/vim-lion' " Aligning 
+	"Plug 'jiangmiao/auto-pairs'	
+	"Plug 'dhruvasagar/vim-table-mode'
+	"Plug 'arecarn/vim-crunch' "Calculator
 call plug#end()
+
+"Colorscheme
+colorscheme hashpunk-v3
+
+function! s:cursor_move(direction) abort 
+    if winnr() != winnr(a:direction)
+        execute "wincmd " . a:direction
+    elseif a:direction ==# 'l'
+        call feedkeys("gt")
+    elseif a:direction ==# 'h'
+        call feedkeys("gT")
+    endif
+endfunction
 
 "Mappings
 map <SPACE> <leader>
 nnoremap <leader><space> <Nop>
+nnoremap <silent> <C-J> :call <SID>cursor_move('j')<CR>
+nnoremap <silent> <C-K> :call <SID>cursor_move('k')<CR>
+nnoremap <silent> <C-L> :call <SID>cursor_move('l')<CR>
+nnoremap <silent> <C-H> :call <SID>cursor_move('h')<CR>
+nnoremap <M-l> gt
+nnoremap <M-h> gT
 
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+"Term
+tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
+tnoremap <silent> <C-J> <c-\><c-n>:call <SID>cursor_move('j')<CR>
+tnoremap <silent> <C-K> <c-\><c-n>:call <SID>cursor_move('k')<CR>
+tnoremap <silent> <C-L> <c-\><c-n>:call <SID>cursor_move('l')<CR>
+tnoremap <silent> <C-H> <c-\><c-n>:call <SID>cursor_move('h')<CR>
+tnoremap <M-l> <c-\><c-n>gt
+tnoremap <M-h> <c-\><c-n>gT
+augroup term_au
+    autocmd!
+    au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+    au TermOpen * setlocal nonumber norelativenumber statusline=%{b:term_title}
+    au BufNewFile,BufRead *.asm   set syntax=nasm
+augroup END
 
 "Yanking
-if has('unnamedplus') | set clipboard+=unnamedplus | endif
 nnoremap <M-y> "+y
-vnoremap <M-y> "+y
+vnoremap <M-y> "+y 
+nnoremap <M-p> "+p
+vnoremap <M-p> "+p 
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
-
-"Easier prev tab
-nnoremap gs gT
-
-nnoremap <silent> <leader>q :q <CR>
-nnoremap <silent><C-s> :call ProjectFiles()<CR>
-nnoremap <silent><M-s> :call fzf#run(fzf#wrap({'source': 'fd -H -t f . ~', 
-            \'options': '--reverse --delimiter / --with-nth 4..'}))<CR>
-nnoremap <m-b> :Buffers<CR>
-tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
-
-if has('nvim') && !exists('g:fzf_layout')
-  autocmd! FileType fzf
-  autocmd  FileType fzf set laststatus=0 noshowmode noruler
-    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-endif
-
-if has ('nvim')
-    set fillchars=eob:\ 
-    set pumblend=15
-    set winblend=15
-    hi PmenuSel blend=0
-endif
+"if has('unnamedplus') | set clipboard+=unnamedplus | endif
 
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
@@ -93,6 +148,7 @@ set mouse=a " tmux scrolling
 set number
 set rnu
 set formatoptions+=t
+set formatoptions-=cro
 set noshowmatch
 set ignorecase
 set splitbelow
@@ -101,123 +157,38 @@ set hidden
 set nobackup
 set nowritebackup
 set cmdheight=1
+set laststatus=0
 set updatetime=300
 set shortmess+=c
-set signcolumn=yes
 
-"Looks
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme="badcat"
-let g:airline_powerline_fonts = 1
-colorscheme hashpunk-v2
-
-if (has("nvim"))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+if has('nvim-0.5')
+    set signcolumn=number
+else
+    set signcolumn=auto:1
 endif
+
+if has("nvim")
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  set fillchars=eob:\ 
+  set pumblend=15
+  set winblend=15
+  "hi PmenuSel blend=0
+endif
+
 if exists('+termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
 
-let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
-
-let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
-let g:closetag_filetypes = 'html,xhtml,phtml,xml'
-
-"Netrw
-"let g:netrw_liststyle = 3
-"let g:netrw_banner = 0
-"let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
-"nnoremap <silent> <unique> <c-9> <Plug>NetrwRefresh
-
-" Disable netrw
-let g:loaded_netrw             = 1
-let g:loaded_netrwPlugin       = 1
-let g:loaded_netrwSettings     = 1
-let g:loaded_netrwFileHandlers = 1
-
-" Fern
-nnoremap <silent> <leader>h :leftabove new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>l :vsp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>j :sp <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>k :aboveleft new <bar>Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent> <leader>w :tabe <bar> Fern <C-r>=<SID>smart_path()<CR><CR>
-nnoremap <silent>         - :Fern <C-r>=<SID>smart_path()<CR><CR>
-
-function! s:smart_path() abort
-  if !empty(&buftype) || bufname('%') =~# '^[^:]\+://'
-    return fnamemodify('.', ':p')
-  endif
-  return fnamemodify(expand('%'), ':p:h')
-endfunctio
-
-function! s:init_fern() abort
-  nunmap <buffer> <C-h>
-  nunmap <buffer> <C-j>
-  nunmap <buffer> <C-k>
-  nunmap <buffer> <C-l>
-  nmap <buffer><expr>
-        \ <Plug>(fern-my-collapse-or-leave)
-        \ fern#smart#drawer(
-        \   "\<Plug>(fern-action-collapse)",
-        \   "\<Plug>(fern-action-leave)",
-        \ )
-  nmap <buffer><nowait> - <Plug>(fern-my-collapse-or-leave)
-  nmap <buffer><nowait> S <Plug>(fern-action-mark-toggle)
-endfunction
-
-augroup fern-custom
-  autocmd! *
-  autocmd FileType fern call s:init_fern()
-augroup END
-
-augroup my-fern-hijack
+augroup remember_folds
   autocmd!
-  autocmd BufEnter * ++nested call <SID>hijack_directory()
+  autocmd BufWinLeave,BufLeave,BufWritePost,BufHidden,QuitPre ?* nested silent! mkview!
+  autocmd BufWinEnter ?* silent! loadview
 augroup END
 
-function! s:hijack_directory() abort
-  if !isdirectory(expand('%'))
-    return
-  endif
-  exec 'Fern '. expand('%')
-endfunction
+func! Modified_color_prefix() abort
+    return &modified ? "%1*" : "%0*"
+endfunc
 
-" Git search
-function! s:get_git_root()
-    let l:res = split(system('git rev-parse --show-toplevel'), '\n')[0]
-    return v:shell_error == 0 ? l:res : 0
-endfunction
-
-function! s:get_coc_root()
-    for workspace in g:WorkspaceFolders
-        if stridx(expand('%:p'), workspace) != '-1'
-            return workspace
-        endif
-    endfor
-endfunction
-
-function! Get_project_root()
-    let l:sources = [function('s:get_git_root'), function('s:get_coc_root')]
-    for Source in l:sources
-        let l:dict = call(Source, [])
-        if !empty(l:dict) 
-            return l:dict
-        endif
-    endfor
-endfunction
-
-function! ProjectFiles()
-    let l:gitRoot = s:get_git_root()
-    if !empty(l:gitRoot) 
-        execute "GFiles -co --exclude-standard"
-        return 1
-    endif
-
-    let l:cocRoot = s:get_coc_root()
-    if !empty(l:cocRoot) 
-        execute "FZF " . l:cocRoot
-        return 1
-    endif
-endfunction
+set rulerformat=%70(%=%{%Modified_color_prefix()%}%F\ %([%{&ff}\|%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}%k\|%Y]%)\ %([%l,%v][%p%%]\ %)%)

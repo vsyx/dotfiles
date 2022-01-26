@@ -61,7 +61,6 @@ git_fzf() {
 zle -N git_fzf
 bindkey '^G' git_fzf
 
-
 # vimfzf() {
     #local files=$(fd -H -t f --ignore-file $IGNORE_FILE . . | fzf -m)
     #if [ $files ]; then

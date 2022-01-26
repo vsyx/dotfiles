@@ -1,23 +1,26 @@
-zmodload zsh/complist
 fpath=(
-  /usr/local/share/zsh/site-functions
   $fpath
 )
 plugins=(virtualenv)
 
 [ -f $XDG_CONFIG_HOME/aliases ]&&  source $XDG_CONFIG_HOME/aliases
 
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=100000
 HISTFILE=$ZDOTDIR/hist
 
-autoload -Uz compinit promptinit && compinit -U
-zstyle ':completion:*' menu select gain-privileges 1
-compinit
-_comp_options+=(globdots)
-promptinit
-
+setopt autocd
+setopt interactive_comments
 unsetopt beep
+
+# Basic auto/tab complete:
+#autoload -Uz compinit promptinit && compinit -U
+autoload -U compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
+
 autoload edit-command-line; zle -N edit-command-line
 bindkey -v
 bindkey '^e' edit-command-line
@@ -67,7 +70,6 @@ precmd_functions+=(prompt)
 #export PROMPT="%F{161}%5c%f $(git_branch_prompt) "
 #prompt_themes+=(personal)
 #prompt personal
-
 
 stty -ixon # unbind C-S
 stty -ixoff # unbind C-Q
@@ -128,7 +130,8 @@ x11-clip-wrap-widgets paste  $paste_widgets
 export LS_COLORS='di=1;35:fi=0:ln=90:ex=92:tw=0:ow=0'
 
 #Autojump
-[[ -s /home/$HOME/.autojump/etc/profile.d/autojump.sh ]] && source /home/$HOME/.autojump/etc/profile.d/autojump.sh
+[[ -s /home/$HOME/.autojump/etc/profile.d/autojump.sh ]] \
+    && source /home/$HOME/.autojump/etc/profile.d/autojump.sh
 
 # Syntax highlight has to be at the end
 source $XDG_CONFIG_HOME/fzf/fzf.zsh
@@ -136,4 +139,12 @@ source $XDG_CONFIG_HOME/fzf/fzf.zsh
 # pyenv
 eval "$(pyenv init -)"
 
-[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
+    && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Check if there's anything that should be executed upon starting the shell
+if [[ $1 == eval ]]
+then
+    "$@"
+set --
+fi

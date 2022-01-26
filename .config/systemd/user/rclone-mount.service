@@ -1,0 +1,14 @@
+[Unit]
+Description=rclone-mount
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment="TARGET_DIR=%h/Sync" "HOME=%h"
+ExecStartPre=/bin/sh -c 'while ! ping -c 3 1.1.1.1 ; do sleep 2 ; done'
+ExecStart=/home/tixxy/.local/bin/rcloneMount
+ExecStop=/usr/bin/fusermount -zu "$TARGET_DIR"
+Restart=on-abort
+
+[Install]
+WantedBy=default.target

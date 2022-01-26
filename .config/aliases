@@ -69,6 +69,13 @@ if $(command -v nvim > /dev/null); then
 fi
 
 command -v exa > /dev/null && alias ls='exa'
+if command -v 7z > /dev/null; then
+    alias 7zamax="7z a -mx=9 -m0=lzma2"
+fi
+
+# Patched cp/mv with progress support: https://github.com/jarun/advcpmv
+command -v cpg > /dev/null && alias cp='cpg -g'
+command -v mvg > /dev/null && alias mv='mvg -g'
 
 #function chpwd() { 
 #    emulate -L zsh

@@ -1,5 +1,5 @@
 super + Return
-    st	
+    st -- zsh -is eval 'tmux info &>/dev/null && tmux at || tmux'
 
 super + d
     dmenu_run -fn monospace:size=12 -nb '#000000' -nf '#ffffff' -sb '#d7005f' 
@@ -36,12 +36,15 @@ super + b
 super + a
     xbacklight -dec 5
 
+alt + l
+    xdotool keyup l key --clearmodifiers Right
+
 # Toggle floating
 super + shift + space 
     bspc node focused -t '~floating'
 
-XF86Audio{LowerVolume,RaiseVolume}
-    amixer sset Master 10%{-,+} && refbar
+#XF86Audio{LowerVolume,RaiseVolume}
+#    amixer sset Master 10%{-,+} && refbar
 
 XF86MonBrightness{Down,Up}
     xbacklight -{dec,inc} 5
