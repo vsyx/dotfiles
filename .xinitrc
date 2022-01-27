@@ -42,7 +42,6 @@ xsetroot -cursor_name left_ptr
 setxkbmap -option caps:escape -option terminate:ctrl_alt_bksp
 picom &
 sxhkd -c $XDG_CONFIG_HOME/sxhkd/sxhkdrc2 &
-/usr/bin/prime-offload
 exec bspwm
 
 #setbar &

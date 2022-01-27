@@ -1,0 +1,14 @@
+#!/bin/sh
+
+TARGET_DIR="${TARGET_DIR:-$HOME/Sync}"
+REMOTE="onedrive_venta"
+REMOTE_DIR="/rclone"
+
+rclone mount $REMOTE:$REMOTE_DIR $TARGET_DIR \
+    -v \
+	--dir-cache-time 5m \
+	#--poll-interval 15s \
+	--vfs-cache-mode full \
+	--vfs-cache-max-size 1G \
+	--vfs-cache-max-age 168h
+

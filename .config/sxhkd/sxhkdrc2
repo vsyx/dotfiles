@@ -43,8 +43,8 @@ alt + l
 super + shift + space 
     bspc node focused -t '~floating'
 
-#XF86Audio{LowerVolume,RaiseVolume}
-#    amixer sset Master 10%{-,+} && refbar
+XF86Audio{LowerVolume,RaiseVolume}
+    amixer sset Master 10%{-,+} && refbar
 
 XF86MonBrightness{Down,Up}
     xbacklight -{dec,inc} 5

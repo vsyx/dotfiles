@@ -139,6 +139,9 @@ source $XDG_CONFIG_HOME/fzf/fzf.zsh
 # pyenv
 eval "$(pyenv init -)"
 
+#nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
 [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
     && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
