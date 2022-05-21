@@ -1,0 +1,16 @@
+#!/bin/sh
+
+export RESTIC_PASSWORD_FILE="$XDG_CONFIG_HOME/restic/restic_password.txt"
+export RESTIC_REPOSITORY="rclone:restic_backup:/"
+
+DIRS_TO_BACKUP="/etc /home"
+FILES_TO_BACKUP_FILE=$(mktemp)
+
+rg --files --hidden --no-require-git --null $DIRS_TO_BACKUP > $FILES_TO_BACKUP_FILE \
+    && restic backup --files-from-raw $FILES_TO_BACKUP_FILE --tag "linux"
+
+RET=$?
+
+rm $FILES_TO_BACKUP_FILE
+
+exit $RET

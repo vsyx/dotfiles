@@ -85,6 +85,7 @@ call plug#begin()
 
     Plug 'antoinemadec/FixCursorHold.nvim'
         let g:cursorhold_updatetime = 100
+    Plug 'morhetz/gruvbox'
 
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
     let g:coc_start_at_startup = 1
@@ -94,7 +95,8 @@ call plug#begin()
                 \'coc-eslint',
                 \'coc-rust-analyzer',
                 \'coc-pyright', 
-                \'coc-clangd'
+                \'coc-clangd',
+                \'coc-java'
                 \]
                 "\'coc-svelte',
                 "\'coc-rls',
@@ -186,6 +188,7 @@ vnoremap <M-y> "+y
 nnoremap <M-p> "+p
 vnoremap <M-p> "+p 
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+nnoremap <M-i> "+yi"
 "if has('unnamedplus') | set clipboard+=unnamedplus | endif
 
 set tabstop=4       " number of visual spaces per TAB

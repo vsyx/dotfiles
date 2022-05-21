@@ -1,0 +1,9 @@
+Sync/
+.cache/
+.m2/
+.npm/
+.pyenv/
+.nvm/
+.java/
+.cmake/
+.vim/

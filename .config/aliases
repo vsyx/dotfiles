@@ -77,6 +77,11 @@ fi
 command -v cpg > /dev/null && alias cp='cpg -g'
 command -v mvg > /dev/null && alias mv='mvg -g'
 
+# Feh with opinionated defaults
+command -v feh > /dev/null && alias feh='feh -dxB Black'
+
+command -v shutdown_update_backup > /dev/null && alias shutdownme="doas $(command -v shutdown_update_backup)"
+
 #function chpwd() { 
 #    emulate -L zsh
 #    ls -a
